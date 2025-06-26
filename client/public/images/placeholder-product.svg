@@ -1,0 +1,11 @@
+<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="400" fill="#F3F4F6"/>
+  <path d="M100 150L200 50L300 150V300H100V150Z" stroke="#9CA3AF" stroke-width="2"/>
+  <path d="M100 150L200 50V300" stroke="#9CA3AF" stroke-width="2" stroke-dasharray="4 4"/>
+  <path d="M300 150L200 50V300" stroke="#9CA3AF" stroke-width="2" stroke-dasharray="4 4"/>
+  <path d="M100 300H300" stroke="#9CA3AF" stroke-width="2"/>
+  <path d="M100 150H300" stroke="#9CA3AF" stroke-width="2"/>
+  <path d="M150 250H250" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/>
+  <path d="M150 200H250" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/>
+  <path d="M150 175H250" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/>
+</svg>
