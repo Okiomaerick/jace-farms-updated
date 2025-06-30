@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom';
+import servicesHeroImage from '../assets/images/heroes/services-hero.jpg';
+import defaultHeroImage from '../assets/images/heroes/default-hero.jpg';
 
 const services = [
   {
@@ -87,10 +89,14 @@ const Services = () => {
       {/* Hero Section */}
       <div className="relative bg-green-700 overflow-hidden">
         <div className="absolute inset-0">
-          <img
+          <img loading="lazy"
             className="w-full h-full object-cover"
-            src="/src/assets/images/services-hero.jpg"
+            src={servicesHeroImage}
             alt="Our agricultural services"
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = defaultHeroImage;
+            }}
           />
           <div className="absolute inset-0 bg-green-700 mix-blend-multiply" aria-hidden="true" />
         </div>

@@ -3,7 +3,7 @@ import { useState } from 'react';
 // Import testimonial images (will be undefined if files don't exist)
 const luciaImg = () => {
   try {
-    return require('../assets/images/testimonials/lucia.jpg');
+    return require('../assets/images/testimonials/webp/lucia.webp');
   } catch (e) {
     return null;
   }
@@ -11,7 +11,7 @@ const luciaImg = () => {
 
 const muremiImg = () => {
   try {
-    return require('../assets/images/testimonials/muremi.jpg');
+    return require('../assets/images/testimonials/webp/muremi.webp');
   } catch (e) {
     return null;
   }
@@ -19,7 +19,7 @@ const muremiImg = () => {
 
 const hesbonImg = () => {
   try {
-    return require('../assets/images/testimonials/hesbon.jpg');
+    return require('../assets/images/testimonials/webp/hesbon.webp');
   } catch (e) {
     return null;
   }

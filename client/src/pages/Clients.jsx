@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { FaQuoteLeft, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import clientsHeroImage from '../assets/images/heroes/clients-hero.jpg';
+import defaultHeroImage from '../assets/images/heroes/default-hero.jpg';
 
 const clientTypes = [
   { id: 'all', name: 'All Clients' },
@@ -87,10 +89,15 @@ const Clients = () => {
       {/* Hero Section */}
       <div className="relative bg-green-700 overflow-hidden">
         <div className="absolute inset-0">
-          <img
+          <img 
+            loading="lazy"
             className="w-full h-full object-cover"
-            src="/src/assets/images/clients-hero.jpg"
+            src={clientsHeroImage}
             alt="Our valued clients"
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = defaultHeroImage;
+            }}
           />
           <div className="absolute inset-0 bg-green-700 mix-blend-multiply" aria-hidden="true" />
         </div>

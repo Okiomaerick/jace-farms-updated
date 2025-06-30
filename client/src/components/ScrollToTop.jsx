@@ -19,6 +19,15 @@ const ScrollToTop = ({ children }) => {
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
   }, [pathname]);
+  
+  // Clean up scroll restoration on unmount
+  useEffect(() => {
+    return () => {
+      if ('scrollRestoration' in window.history) {
+        window.history.scrollRestoration = 'auto';
+      }
+    };
+  }, []);
 
   // Handle hash links (anchor links)
   useEffect(() => {

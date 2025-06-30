@@ -1,6 +1,35 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FaShoppingCart, FaLeaf, FaSeedling, FaTractor, FaVial } from 'react-icons/fa';
+
+// Function to get image URL from public directory
+const getImageUrl = (path) => {
+  // Remove leading slash if exists
+  const cleanPath = path.startsWith('/') ? path.slice(1) : path;
+  return new URL(`/public/${cleanPath}`, import.meta.url).href;
+};
+
+// Preload images
+const preloadImages = async () => {
+  const images = [
+    'images/heroes/products-hero.jpg',
+    'images/heroes/default-hero.jpg'
+  ];
+
+  const imagePromises = images.map((src) => {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.src = `/${src}`;
+      img.onload = () => resolve(img);
+      img.onerror = (err) => {
+        console.error(`Failed to load image: ${src}`, err);
+        resolve(null);
+      };
+    });
+  });
+
+  return Promise.all(imagePromises);
+};
 
 const products = [
   {
@@ -68,6 +97,27 @@ const Products = () => {
 
   const featuredProduct = products.find(product => product.featured);
 
+  const [heroImage, setHeroImage] = useState('');
+  const [defaultImage, setDefaultImage] = useState('');
+
+  useEffect(() => {
+    // Preload images on component mount
+    preloadImages().then(() => {
+      // Set image URLs after preloading
+      setHeroImage('/images/heroes/products-hero.jpg');
+      setDefaultImage('/images/heroes/default-hero.jpg');
+    });
+  }, []);
+
+  // Handle image error
+  const handleImageError = (e) => {
+    console.error('Error loading image:', e.target.src);
+    if (e.target.src !== defaultImage) {
+      e.target.onerror = null; // Prevent infinite loop
+      e.target.src = defaultImage;
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
@@ -76,7 +126,7 @@ const Products = () => {
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute inset-0">
             <img
-              src="/images/products/hero.jpg"
+              src={heroImage || '/images/heroes/default-hero.jpg'}
               alt="Poultry and farm products"
               className="w-full h-full object-cover object-center"
               style={{
@@ -92,6 +142,7 @@ const Products = () => {
               loading="eager"
               decoding="async"
               fetchpriority="high"
+              onError={handleImageError}
             />
             <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-black/70"></div>
           </div>

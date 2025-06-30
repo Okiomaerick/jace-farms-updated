@@ -1,8 +1,11 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
+import { visualizer } from 'rollup-plugin-visualizer';
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
+  base: './',
+  publicDir: 'public',
   plugins: [
     react({
       jsxImportSource: 'react',
@@ -14,8 +17,14 @@ export default defineConfig({
           }]
         ]
       }
+    }),
+    mode === 'analyze' && visualizer({
+      open: true,
+      filename: 'bundle-analyzer.html',
+      gzipSize: true,
+      brotliSize: true
     })
-  ],
+  ].filter(Boolean),
   resolve: {
     alias: {
       '@': resolve(__dirname, './src'),
@@ -28,9 +37,9 @@ export default defineConfig({
   server: {
     port: 3000,
     open: true,
-    strictPort: true,
-    hmr: {
-      overlay: false
+    historyApiFallback: {
+      disableDotRule: true,
+      verbose: true
     },
     proxy: {
       '/api': {
@@ -39,6 +48,10 @@ export default defineConfig({
         secure: false,
         rewrite: (path) => path.replace(/^\/api/, '')
       }
+    },
+    strictPort: true,
+    hmr: {
+      overlay: false
     }
   },
   optimizeDeps: {
@@ -57,19 +70,47 @@ export default defineConfig({
     }
   },
   build: {
-    outDir: 'dist',
+    outDir: '../dist/client',
     assetsDir: 'assets',
-    sourcemap: true,
+    emptyOutDir: true,
+    sourcemap: mode !== 'production',
+    minify: mode === 'production' ? 'terser' : false,
+    chunkSizeWarningLimit: 1000,
+    reportCompressedSize: true,
+    terserOptions: {
+      compress: {
+        drop_console: mode === 'production',
+        drop_debugger: mode === 'production'
+      }
+    },
     rollupOptions: {
       output: {
-        manualChunks: {
-          react: ['react', 'react-dom', 'react-router-dom'],
-          vendor: ['@headlessui/react', '@heroicons/react']
-        }
+        manualChunks: (id) => {
+          if (id.includes('node_modules')) {
+            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router-dom')) {
+              return 'vendor';
+            }
+            if (id.includes('@headlessui') || id.includes('@heroicons')) {
+              return 'ui';
+            }
+            return 'vendor-other';
+          }
+        },
+        chunkFileNames: 'js/[name]-[hash].js',
+        entryFileNames: 'js/[name]-[hash].js',
+        assetFileNames: 'assets/[ext]/[name]-[hash][extname]'
       }
+    }
+  },
+  preview: {
+    port: 3000,
+    strictPort: true,
+    historyApiFallback: {
+      disableDotRule: true,
+      index: '/index.html'
     }
   },
   esbuild: {
     jsx: 'automatic',
   }
-});
+}));

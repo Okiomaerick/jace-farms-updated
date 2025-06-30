@@ -1,39 +1,15 @@
 import { Link } from 'react-router-dom';
-import heroImage from '../assets/images/hero.jpg'; // Using the same hero image as in the Hero component
-import aboutHeroImage from '../assets/images/about-hero.jpg'; // Import the about hero image
+import heroImage from '../assets/images/webp/hero.webp';
+import aboutHeroImage from '../assets/images/about-hero.jpg';
 
-// Import team member images (will be undefined if files don't exist)
-const jamesImg = () => {
-  try {
-    return require('../assets/images/team/james.jpg');
-  } catch (e) {
-    return null;
-  }
-};
-
-const aliImg = () => {
-  try {
-    return require('../assets/images/team/ali.jpg');
-  } catch (e) {
-    return null;
-  }
-};
-
-const collinsImg = () => {
-  try {
-    return require('../assets/images/team/collins.jpg');
-  } catch (e) {
-    return null;
-  }
-};
-
+// Team member images with WebP fallbacks
 const teamMembers = [
   {
     id: 1,
     name: 'James Nganga',
     role: 'Founder & CEO',
     bio: 'With over 20 years in agribusiness, James leads our vision for sustainable and transformative farming in Kenya.',
-    image: jamesImg(),
+    image: null, // Image will be handled with fallback
     initials: 'JN'
   },
   {
@@ -41,7 +17,7 @@ const teamMembers = [
     name: 'Mr. Ali',
     role: 'Head of Operations',
     bio: 'Mr. Ali oversees our day-to-day operations with a focus on process efficiency and top-tier service delivery.',
-    image: aliImg(),
+    image: null, // Image will be handled with fallback
     initials: 'MA'
   },
   {
@@ -49,7 +25,7 @@ const teamMembers = [
     name: 'Collins Caretakers',
     role: 'Lead Agronomist',
     bio: 'Collins brings deep expertise in crop science and sustainable farming, helping clients improve yields through smart agronomic practices.',
-    image: collinsImg(),
+    image: null, // Image will be handled with fallback
     initials: 'CC'
   }
 ];
@@ -58,7 +34,7 @@ const About = () => {
   return (
     <div className="bg-white">
       {/* Hero Section with Text Overlay */}
-      <div className="relative w-full">
+      <div className="relative w-full" style={{ minHeight: '20rem' }}>
         <div className="h-80 sm:h-[500px] w-full">
           <img
             src={aboutHeroImage}
@@ -73,7 +49,6 @@ const About = () => {
             }}
             loading="eager"
             decoding="async"
-            fetchPriority="high"
           />
           <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
             <div className="text-center px-4">
@@ -232,27 +207,9 @@ const About = () => {
                   <div className="flow-root bg-gray-50 rounded-lg px-6 pb-8 h-full">
                     <div className="-mt-6 flex flex-col items-center">
                       <div className="relative">
-                        {member.image ? (
-                          <>
-                            <img
-                              className="h-24 w-24 rounded-full object-cover border-2 border-green-500"
-                              src={member.image}
-                              alt={member.name}
-                              onError={(e) => {
-                                e.target.style.display = 'none';
-                                const fallback = e.target.nextElementSibling;
-                                if (fallback) fallback.style.display = 'flex';
-                              }}
-                            />
-                            <div className="h-24 w-24 rounded-full bg-gray-200 flex items-center justify-center font-bold text-gray-700 text-2xl absolute top-0 left-0 hidden">
-                              {member.initials}
-                            </div>
-                          </>
-                        ) : (
-                          <div className="h-24 w-24 rounded-full bg-gray-200 flex items-center justify-center font-bold text-gray-700 text-2xl">
-                            {member.initials}
-                          </div>
-                        )}
+                        <div className="h-24 w-24 rounded-full bg-green-100 flex items-center justify-center text-2xl font-bold text-green-800">
+                          {member.initials}
+                        </div>
                       </div>
                       <h3 className="mt-8 text-lg font-medium text-gray-900 text-center">{member.name}</h3>
                       <p className="mt-1 text-base text-green-600 text-center">{member.role}</p>
