@@ -6,6 +6,8 @@ import { visualizer } from 'rollup-plugin-visualizer';
 export default defineConfig(({ mode }) => ({
   base: './',
   publicDir: 'public',
+  build: {
+    outDir: 'dist',
   plugins: [
     react({
       jsxImportSource: 'react',
@@ -101,6 +103,7 @@ export default defineConfig(({ mode }) => ({
         assetFileNames: 'assets/[ext]/[name]-[hash][extname]'
       }
     }
+  },
   },
   preview: {
     port: 3000,
