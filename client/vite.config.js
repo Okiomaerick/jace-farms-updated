@@ -5,19 +5,19 @@ import { visualizer } from 'rollup-plugin-visualizer';
 import { readFileSync, writeFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 
-// Plugin to copy _redirects file
+// Plugin to copy .redirects file
 const copyRedirects = () => ({
   name: 'copy-redirects',
   writeBundle() {
     const __dirname = fileURLToPath(new URL('.', import.meta.url));
-    const source = resolve(__dirname, 'public/_redirects');
-    const dest = resolve(__dirname, 'dist/_redirects');
+    const source = resolve(__dirname, 'public/.redirects');
+    const dest = resolve(__dirname, 'dist/.redirects');
     try {
       const content = readFileSync(source, 'utf8');
       writeFileSync(dest, content, 'utf8');
-      console.log('Copied _redirects to dist/');
+      console.log('Copied .redirects to dist/');
     } catch (err) {
-      console.error('Error copying _redirects:', err);
+      console.error('Error copying .redirects:', err);
     }
   },
 });
@@ -82,9 +82,9 @@ export default defineConfig(({ mode }) => ({
     
     rollupOptions: {
       output: {
-        // Don't hash the _redirects file
+        // Don't hash the .redirects file
         assetFileNames: (assetInfo) => {
-          if (assetInfo.name === '_redirects') return '[name][extname]';
+          if (assetInfo.name === '.redirects') return '[name][extname]';
           return 'assets/[name]-[hash][extname]';
         },
         
