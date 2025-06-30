@@ -3,16 +3,32 @@
 
 services:
   - type: web
-    name: jace-farms
-    env: node
-    buildCommand: cd client && npm install && npm run build && cd ../server && npm install
-    startCommand: cd server && npm start
+    name: jace-farms-client
+    env: static
+    buildCommand: |
+      cd client && \
+      npm install && \
+      npm run build
+    staticPublishPath: "./client/dist"
+    routes:
+      - type: rewrite
+        source: "/*"
+        destination: "/index.html"
     envVars:
       - key: NODE_ENV
         value: production
-      - key: PORT
-        value: 10000
-      - key: MONGO_URI
+
+  - type: web
+    name: jace-farms-api
+    env: node
+    buildCommand: |
+      cd server && \
+      npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
         fromDatabase:
           name: jace-farms-db
           property: connectionString
