@@ -9,6 +9,26 @@ export default defineConfig(({ mode }) => ({
   build: {
     outDir: 'dist',
     copyPublicDir: true,
+    rollupOptions: {
+      output: {
+        manualChunks: (id) => {
+          if (id.includes('node_modules')) {
+            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router-dom')) {
+              return 'vendor';
+            }
+            if (id.includes('@headlessui') || id.includes('@heroicons')) {
+              return 'ui';
+            }
+            return 'vendor-other';
+          }
+        },
+        chunkFileNames: 'js/[name]-[hash].js',
+        entryFileNames: 'js/[name]-[hash].js',
+        assetFileNames: 'assets/[ext]/[name]-[hash][extname]'
+      }
+    },
+    // Ensure _redirects is copied to the root of the build output
+    assetsInlineLimit: 0,
   plugins: [
     react({
       jsxImportSource: 'react',
