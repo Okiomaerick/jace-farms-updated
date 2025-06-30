@@ -4,7 +4,7 @@ import { resolve } from 'path';
 import { visualizer } from 'rollup-plugin-visualizer';
 
 export default defineConfig(({ mode }) => ({
-  base: './',
+  base: process.env.NODE_ENV === 'production' ? '/' : '/',
   publicDir: 'public',
   build: {
     outDir: 'dist',
