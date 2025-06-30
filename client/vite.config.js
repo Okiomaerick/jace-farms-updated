@@ -8,6 +8,7 @@ export default defineConfig(({ mode }) => ({
   publicDir: 'public',
   build: {
     outDir: 'dist',
+    copyPublicDir: true,
   plugins: [
     react({
       jsxImportSource: 'react',
