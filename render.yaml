@@ -3,11 +3,15 @@ services:
     name: jace-farms
     env: node
     buildCommand: |
+      # Install root dependencies
       npm install
+      
+      # Install client dependencies and build
       cd client
       npm install
-      npm install -g vite
-      npm run build
+      
+      # Use npx to run Vite directly without global install
+      npx vite build
     startCommand: node server.js
     envVars:
       - key: NODE_ENV
