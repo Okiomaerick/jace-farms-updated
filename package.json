@@ -1,16 +1,17 @@
 {
-  "name": "jace-farms-server",
+  "name": "jace-farms",
   "version": "1.0.0",
-  "description": "Backend for Jace Farms & Consultancy Services Ltd",
+  "description": "Jace Farms & Consultancy Services Ltd - Fullstack Application",
   "main": "server.js",
   "type": "module",
   "scripts": {
     "start": "node server.js",
     "server": "nodemon server.js",
-    "client": "cd ../client && npm run dev",
+    "client": "cd client && npm run dev",
+    "client:build": "cd client && npm run build",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "build": "cd ../client && npm install && npm run build",
-    "heroku-postbuild": "npm install && npm run build"
+    "build": "npm install && npm run client:build",
+    "heroku-postbuild": "npm run build"
   },
   "dependencies": {
     "cors": "^2.8.5",
@@ -21,5 +22,9 @@
   "devDependencies": {
     "concurrently": "^9.2.0",
     "nodemon": "^2.0.20"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
   }
 }
