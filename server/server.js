@@ -22,18 +22,29 @@ app.use('/api/contact', contactRoutes);
 
 // Serve static assets in production
 if (process.env.NODE_ENV === 'production') {
-  // Set static folder
+  // Set static folder for production
   const clientBuildPath = path.join(__dirname, '../client/dist');
+  
+  // Serve static files from the React app
   app.use(express.static(clientBuildPath));
-
+  
   // Handle React routing, return all requests to React app
   app.get('*', (req, res) => {
-    res.sendFile(path.resolve(clientBuildPath, 'index.html'));
+    res.sendFile(path.join(clientBuildPath, 'index.html'));
   });
 } else {
+  // Development mode - serve from the client's public directory
+  const clientPublicPath = path.join(__dirname, '../client/public');
+  app.use(express.static(clientPublicPath));
+  
+  // Handle React routing in development
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(clientPublicPath, 'index.html'));
+  });
+  
   // Test route for development
-  app.get('/', (req, res) => {
-    res.send('Jace Farms API is running in development mode...');
+  app.get('/api', (req, res) => {
+    res.json({ message: 'Jace Farms API is running in development mode...' });
   });
 }
 
