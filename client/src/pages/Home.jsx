@@ -3,6 +3,8 @@ import Hero from '../components/Hero';
 import Stats from '../components/Stats';
 import Testimonials from '../components/Testimonials';
 
+import Campaigns from '../components/Campaigns';
+
 const Home = () => {
   return (
     <div className="min-h-screen">
@@ -139,6 +141,9 @@ const Home = () => {
 
       {/* Testimonials */}
       <Testimonials />
+
+      {/* Campaigns & Special Offers */}
+      <Campaigns />
 
       {/* CTA Section */}
       <div className="bg-green-700">

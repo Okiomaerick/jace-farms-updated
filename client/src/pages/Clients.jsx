@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { FaQuoteLeft, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
-import clientsHeroImage from '../assets/images/heroes/clients-hero.jpg';
-import defaultHeroImage from '../assets/images/heroes/default-hero.jpg';
+import PictureWithFallback from '../components/ui/PictureWithFallback';
+import heroImage from '../assets/images/heroes/clients-hero.webp';
 
 const clientTypes = [
   { id: 'all', name: 'All Clients' },
@@ -87,27 +87,41 @@ const Clients = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <div className="relative bg-green-700 overflow-hidden">
-        <div className="absolute inset-0">
-          <img 
-            loading="lazy"
+      <div className="relative bg-gray-900">
+        <div className="relative h-80 sm:h-[500px] w-full">
+          <div className="absolute inset-0 bg-black opacity-50 z-10"></div>
+          <PictureWithFallback
+            src={heroImage}
+            alt="Our Valued Clients"
             className="w-full h-full object-cover"
-            src={clientsHeroImage}
-            alt="Our valued clients"
-            onError={(e) => {
-              e.target.onerror = null;
-              e.target.src = defaultHeroImage;
+            style={{
+              objectPosition: 'center center',
+              imageRendering: 'auto',
+              transform: 'translateZ(0)',
+              backfaceVisibility: 'hidden',
+              WebkitBackfaceVisibility: 'hidden'
             }}
+            loading="eager"
+            fallbackType="webp"
           />
-          <div className="absolute inset-0 bg-green-700 mix-blend-multiply" aria-hidden="true" />
-        </div>
-        <div className="relative max-w-7xl mx-auto py-24 px-4 sm:py-32 sm:px-6 lg:px-8">
-          <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
-            Our Valued Clients
-          </h1>
-          <p className="mt-6 text-xl text-green-100 max-w-3xl">
-            Building lasting relationships with farmers and agricultural businesses across Kenya.
-          </p>
+          <div className="absolute inset-0 flex items-center justify-center z-20 px-4 sm:px-6 lg:px-8">
+            <div className="text-center">
+              <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
+                Our Valued Clients
+              </h1>
+              <p className="mt-6 text-xl text-gray-200 max-w-3xl mx-auto">
+                Building lasting relationships with farmers and agricultural businesses across Kenya.
+              </p>
+              <div className="mt-10">
+                <a
+                  href="#testimonials"
+                  className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                >
+                  Read Testimonials
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 

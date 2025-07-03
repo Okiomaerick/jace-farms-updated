@@ -1,27 +1,54 @@
 import { useState } from 'react';
 
-// Import testimonial images (will be undefined if files don't exist)
-const luciaImg = () => {
-  try {
-    return require('../assets/images/testimonials/webp/lucia.webp');
-  } catch (e) {
-    return null;
+// Import testimonial images with WebP and JPG fallbacks
+const luciaImg = {
+  webp: () => {
+    try {
+      return require('../assets/images/testimonials/lucia.webp');
+    } catch (e) {
+      return null;
+    }
+  },
+  jpg: () => {
+    try {
+      return require('../assets/images/testimonials/lucia.jpg');
+    } catch (e) {
+      return null;
+    }
   }
 };
 
-const muremiImg = () => {
-  try {
-    return require('../assets/images/testimonials/webp/muremi.webp');
-  } catch (e) {
-    return null;
+const muremiImg = {
+  webp: () => {
+    try {
+      return require('../assets/images/testimonials/muremi.webp');
+    } catch (e) {
+      return null;
+    }
+  },
+  jpg: () => {
+    try {
+      return require('../assets/images/testimonials/muremi.jpg');
+    } catch (e) {
+      return null;
+    }
   }
 };
 
-const hesbonImg = () => {
-  try {
-    return require('../assets/images/testimonials/webp/hesbon.webp');
-  } catch (e) {
-    return null;
+const hesbonImg = {
+  webp: () => {
+    try {
+      return require('../assets/images/testimonials/hesbon.webp');
+    } catch (e) {
+      return null;
+    }
+  },
+  jpg: () => {
+    try {
+      return require('../assets/images/testimonials/hesbon.jpg');
+    } catch (e) {
+      return null;
+    }
   }
 };
 
@@ -31,7 +58,7 @@ const testimonials = [
     name: 'Lucia Jaber',
     role: 'Mixed Farmer, Kericho',
     content: 'Jace Farms helped me balance my crop and poultry farming. Their feed and agronomy advice are on point.',
-    image: luciaImg(),
+    image: luciaImg,
     initials: 'LJ'
   },
   {
@@ -39,7 +66,7 @@ const testimonials = [
     name: 'Muremi Nene',
     role: 'Poultry Farmer, Nyeri',
     content: 'I doubled my egg output thanks to their feed plan and disease control tips. Very reliable team.',
-    image: muremiImg(),
+    image: muremiImg,
     initials: 'MN'
   },
   {
@@ -47,7 +74,7 @@ const testimonials = [
     name: 'Hesbon Mogaka',
     role: 'Agribusiness Consultant, Kisii',
     content: 'Working with Jace Farms made my advisory work easier. Their tech solutions and consulting are solid.',
-    image: hesbonImg(),
+    image: hesbonImg,
     initials: 'HM'
   },
 ];
@@ -82,19 +109,27 @@ const Testimonials = () => {
                 <div className="flex items-center">
                   <div className="flex-shrink-0">
                     {testimonials[currentIndex].image ? (
-                      <img
-                        className="h-16 w-16 rounded-full object-cover border-2 border-green-100"
-                        src={testimonials[currentIndex].image}
-                        alt={testimonials[currentIndex].name}
-                        onError={(e) => {
-                          e.target.style.display = 'none';
-                          e.target.nextElementSibling.style.display = 'flex';
-                        }}
-                      />
-                    ) : null}
-                    <div className={`h-16 w-16 rounded-full bg-gray-200 flex items-center justify-center font-bold text-gray-700 text-xl ${testimonials[currentIndex].image ? 'hidden' : 'flex'}`}>
-                      {testimonials[currentIndex].initials}
-                    </div>
+                      <div className="relative h-12 w-12 rounded-full overflow-hidden">
+                        <picture>
+                          {testimonials[currentIndex].image.webp() && (
+                            <source srcSet={testimonials[currentIndex].image.webp()} type="image/webp" />
+                          )}
+                          {testimonials[currentIndex].image.jpg() && (
+                            <source srcSet={testimonials[currentIndex].image.jpg()} type="image/jpeg" />
+                          )}
+                          <img
+                            className="h-12 w-12 object-cover"
+                            src={testimonials[currentIndex].image.jpg() || ''}
+                            alt={testimonials[currentIndex].name}
+                            loading="lazy"
+                          />
+                        </picture>
+                      </div>
+                    ) : (
+                      <div className="h-12 w-12 rounded-full bg-green-100 flex items-center justify-center text-green-600 font-medium">
+                        {testimonials[currentIndex].initials}
+                      </div>
+                    )}
                   </div>
                   <div className="ml-4">
                     <div className="text-lg font-medium text-gray-900">

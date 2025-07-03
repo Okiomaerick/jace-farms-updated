@@ -1,32 +1,37 @@
 import { Link } from 'react-router-dom';
-import heroImage from '../assets/images/webp/hero.webp';
-import aboutHeroImage from '../assets/images/about-hero.jpg';
+import PictureWithFallback from '../components/ui/PictureWithFallback';
+import heroImage from '../assets/images/heroes/about-hero.webp';
+import storyImage from '../assets/images/webp/hero.webp';
 
-// Team member images with WebP fallbacks
+// Team member data
 const teamMembers = [
   {
     id: 1,
     name: 'James Nganga',
-    role: 'Founder & CEO',
-    bio: 'With over 20 years in agribusiness, James leads our vision for sustainable and transformative farming in Kenya.',
-    image: null, // Image will be handled with fallback
-    initials: 'JN'
+    role: 'Director',
+    bio: 'James Nganga is the Founder and Director of Jace Farms and Consultancy Services. James leads the company\'s strategic direction and operations across poultry farming, animal feed sales, and farm consultancy.',
+    image: '/images/team/james-nganga.jpg',
+    keyRoles: [
+      'Strategic Leadership',
+      'Business Oversight',
+      'Client Relations',
+      'Team Management',
+      'Quality & Compliance'
+    ]
   },
   {
     id: 2,
-    name: 'Mr. Ali',
-    role: 'Head of Operations',
-    bio: 'Mr. Ali oversees our day-to-day operations with a focus on process efficiency and top-tier service delivery.',
-    image: null, // Image will be handled with fallback
-    initials: 'MA'
-  },
-  {
-    id: 3,
-    name: 'Collins Caretakers',
-    role: 'Lead Agronomist',
-    bio: 'Collins brings deep expertise in crop science and sustainable farming, helping clients improve yields through smart agronomic practices.',
-    image: null, // Image will be handled with fallback
-    initials: 'CC'
+    name: 'Cecilia Mumbi',
+    role: 'Operations Manager',
+    bio: 'Cecilia Mumbi holds a Bachelor\'s degree in Business Management and is passionate about entrepreneurship and programming. She ensures day-to-day operations align with the company\'s goals.',
+    image: '/images/team/cecilia-mumbi.jpg',
+    keyRoles: [
+      'Process Management',
+      'Customer Service Coordination',
+      'Inventory & Logistics Oversight',
+      'Team Supervision',
+      'System Improvement'
+    ]
   }
 ];
 
@@ -34,10 +39,11 @@ const About = () => {
   return (
     <div className="bg-white">
       {/* Hero Section with Text Overlay */}
-      <div className="relative w-full" style={{ minHeight: '20rem' }}>
-        <div className="h-80 sm:h-[500px] w-full">
-          <img
-            src={aboutHeroImage}
+      <div className="relative w-full bg-gray-900">
+        <div className="relative h-80 sm:h-[500px] w-full">
+          <div className="absolute inset-0 bg-black opacity-50 z-10"></div>
+          <PictureWithFallback
+            src={heroImage}
             alt="Jace Farms - About Us"
             className="w-full h-full object-cover"
             style={{
@@ -48,17 +54,24 @@ const About = () => {
               WebkitBackfaceVisibility: 'hidden'
             }}
             loading="eager"
-            decoding="async"
+            fallbackType="webp"
           />
-          <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-            <div className="text-center px-4">
-              <h1 className="text-3xl tracking-tight font-extrabold text-white sm:text-4xl md:text-5xl">
-                <span className="block">About Jace Farms</span>
-                <span className="block text-green-200 text-2xl sm:text-3xl md:text-4xl mt-2">Our Story & Mission</span>
+          <div className="absolute inset-0 flex items-center justify-center z-20 px-4 sm:px-6 lg:px-8">
+            <div className="text-center">
+              <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
+                About Jace Farms
               </h1>
-              <p className="mt-3 text-sm text-green-100 sm:text-base sm:max-w-xl sm:mx-auto md:text-lg">
-                Empowering farmers and transforming agriculture in Kenya since 2006.
+              <p className="mt-6 text-xl text-gray-200 max-w-3xl mx-auto">
+                Leading the way in sustainable agriculture and innovative farming solutions in Kenya
               </p>
+              <div className="mt-10">
+                <Link
+                  to="/contact"
+                  className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                >
+                  Get in Touch
+                </Link>
+              </div>
             </div>
           </div>
         </div>
@@ -103,15 +116,20 @@ const About = () => {
                 </p>
               </div>
             </div>
-            <div className="mt-12 -mx-4 relative lg:mt-0 h-96">
-              <div 
-                className="relative mx-auto rounded-lg shadow-xl w-full h-full overflow-hidden"
+            <div className="mt-12 -mx-4 relative lg:mt-0 h-96 rounded-lg shadow-xl overflow-hidden">
+              <PictureWithFallback
+                src={storyImage}
+                alt="Jace Farms - Our Story"
+                className="w-full h-full object-cover"
                 style={{
-                  backgroundImage: `url(${heroImage})`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
+                  objectPosition: 'center center',
+                  imageRendering: 'auto',
+                  transform: 'translateZ(0)',
+                  backfaceVisibility: 'hidden',
+                  WebkitBackfaceVisibility: 'hidden'
                 }}
-                aria-label="About Jace Farms"
+                loading="eager"
+                fallbackType="webp"
               />
             </div>
           </div>
@@ -200,22 +218,72 @@ const About = () => {
             </p>
           </div>
 
-          <div className="mt-10">
-            <div className="space-y-12 lg:space-y-0 lg:grid lg:grid-cols-3 lg:gap-x-8 lg:gap-y-12">
+          <div className="mt-12">
+            <div className="grid gap-8 md:grid-cols-1 lg:grid-cols-1 max-w-4xl mx-auto">
               {teamMembers.map((member) => (
-                <div key={member.id} className="pt-6">
-                  <div className="flow-root bg-gray-50 rounded-lg px-6 pb-8 h-full">
-                    <div className="-mt-6 flex flex-col items-center">
-                      <div className="relative">
-                        <div className="h-24 w-24 rounded-full bg-green-100 flex items-center justify-center text-2xl font-bold text-green-800">
-                          {member.initials}
+                <div key={member.id} className="bg-white rounded-xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+                  <div className="md:flex h-full">
+                    <div className="md:flex-shrink-0 md:w-2/5 relative group">
+                      <img 
+                        className="h-80 w-full object-cover md:h-full" 
+                        src={member.image} 
+                        alt={`${member.name}, ${member.role}`}
+                        loading="lazy"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-6">
+                        <h3 className="text-2xl font-bold text-white">{member.name}</h3>
+                        <p className="text-green-300 font-medium">{member.role}</p>
+                        <div className="mt-2 pt-2 border-t border-green-300/30">
+                          <ul className="space-y-1">
+                            {member.keyRoles.slice(0, 3).map((role, index) => (
+                              <li key={index} className="flex items-center text-white/90 text-sm">
+                                <svg className="h-4 w-4 text-green-300 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                </svg>
+                                {role}
+                              </li>
+                            ))}
+                          </ul>
                         </div>
                       </div>
-                      <h3 className="mt-8 text-lg font-medium text-gray-900 text-center">{member.name}</h3>
-                      <p className="mt-1 text-base text-green-600 text-center">{member.role}</p>
-                      <p className="mt-3 text-base text-gray-500 text-center">
-                        {member.bio}
-                      </p>
+                    </div>
+                    <div className="p-8 md:w-3/5">
+                      <div className="flex flex-col h-full">
+                        <div className="flex-1">
+                          <p className="text-gray-700 leading-relaxed">
+                            {member.bio}
+                          </p>
+                          <div className="mt-6">
+                            <h4 className="text-sm font-semibold text-gray-900 mb-2">Key Responsibilities:</h4>
+                            <ul className="space-y-2">
+                              {member.keyRoles.map((role, index) => (
+                                <li key={index} className="flex items-start">
+                                  <svg className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                  </svg>
+                                  <span className="text-gray-700">{role}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        </div>
+                        <div className="mt-6 pt-4 border-t border-gray-100">
+                          <div className="flex space-x-4">
+                            <a href="#" className="text-gray-400 hover:text-green-600 transition-colors">
+                              <span className="sr-only">LinkedIn</span>
+                              <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                              </svg>
+                            </a>
+                            <a href="#" className="text-gray-400 hover:text-green-600 transition-colors">
+                              <span className="sr-only">Twitter</span>
+                              <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                              </svg>
+                            </a>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>

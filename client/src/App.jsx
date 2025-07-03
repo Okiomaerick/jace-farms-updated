@@ -9,36 +9,56 @@ import Cart from './components/Cart';
 import ErrorBoundary from './components/ErrorBoundary';
 import LoadingFallback from './components/LoadingFallback';
 
-// Lazy load components with error boundaries
-const lazyWithRetry = (componentImport) =>
-  lazy(async () => {
-    try {
-      return await componentImport();
-    } catch (error) {
-      console.error('Error loading component:', error);
-      // Simple retry without p-retry to avoid adding a dependency
-      try {
-        return await componentImport();
-      } catch (retryError) {
-        console.error('Retry failed:', retryError);
-        throw retryError;
-      }
-    }
+// Enhanced lazy loading with better error handling and retry logic
+const retry = (fn, retriesLeft = 3, interval = 1000) => {
+  return new Promise((resolve, reject) => {
+    fn()
+      .then(resolve)
+      .catch((error) => {
+        if (retriesLeft === 0) {
+          console.error('Max retries reached, giving up:', error);
+          reject(error);
+          return;
+        }
+        
+        console.warn(`Retry attempt ${4 - retriesLeft} for module`);
+        
+        // Wait for the interval before retrying
+        setTimeout(() => {
+          retry(fn, retriesLeft - 1, interval * 1.5)
+            .then(resolve, reject);
+        }, interval);
+      });
   });
+};
 
-// Lazy load routes
-const Home = lazyWithRetry(() => import('./pages/Home'));
-const About = lazyWithRetry(() => import('./pages/About'));
-const Services = lazyWithRetry(() => import('./pages/Services'));
-const Products = lazyWithRetry(() => import('./pages/Products'));
-const Clients = lazyWithRetry(() => import('./pages/Clients'));
-const Contact = lazyWithRetry(() => import('./pages/Contact'));
-const Checkout = lazyWithRetry(() => import('./pages/Checkout'));
-const AgriConsultancy = lazyWithRetry(() => import('./pages/services/AgriConsultancy'));
-const PoultryFarming = lazyWithRetry(() => import('./pages/services/PoultryFarming'));
-const FeedProduction = lazyWithRetry(() => import('./pages/services/FeedProduction'));
-const ProductDetail = lazyWithRetry(() => import('./pages/ProductDetail'));
-const NotFound = lazyWithRetry(() => import('./pages/NotFound'));
+// Lazy load components with error boundaries and retry
+const lazyWithRetry = (componentImport) => {
+  return lazy(() => retry(componentImport));
+};
+
+// Lazy load routes with proper error boundaries using static imports
+const lazyLoad = (importFn) => {
+  return lazyWithRetry(() => importFn().catch(error => {
+    console.error('Failed to load module:', error);
+    throw error;
+  }));
+};
+
+// Lazy load routes with static imports for better build-time analysis
+const Home = lazyLoad(() => import('./pages/Home'));
+const About = lazyLoad(() => import('./pages/About'));
+const PastProjects = lazyLoad(() => import('./pages/PastProjects'));
+const Services = lazyLoad(() => import('./pages/Services'));
+const Products = lazyLoad(() => import('./pages/Products'));
+const Clients = lazyLoad(() => import('./pages/Clients'));
+const Contact = lazyLoad(() => import('./pages/Contact'));
+const Checkout = lazyLoad(() => import('./pages/Checkout'));
+const AgriConsultancy = lazyLoad(() => import('./pages/services/AgriConsultancy'));
+const PoultryFarming = lazyLoad(() => import('./pages/services/PoultryFarming'));
+const FeedProduction = lazyLoad(() => import('./pages/services/FeedProduction'));
+const ProductDetail = lazyLoad(() => import('./pages/ProductDetail'));
+const NotFound = lazyLoad(() => import('./pages/NotFound'));
 
 function App() {
   const location = useLocation();
@@ -52,51 +72,54 @@ function App() {
   }, []);
 
   // Track if the app is loading
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Handle route changes
   useEffect(() => {
-    const handleRouteChange = () => {
-      setIsLoading(true);
-      // Small delay to allow Suspense to catch the loading state
-      const timer = setTimeout(() => setIsLoading(false), 100);
-      return () => clearTimeout(timer);
-    };
-
-    handleRouteChange();
-    return () => {};
-  }, [location.pathname]);
+    setIsLoading(true);
+    const timer = setTimeout(() => setIsLoading(false), 200);
+    return () => clearTimeout(timer);
+  }, [location]);
 
   return (
     <ErrorBoundary>
       <CartProvider>
-        <div className="app-container flex flex-col min-h-screen bg-white">
+        <div className="flex flex-col min-h-screen">
           <Navbar />
-          <main className="main-content flex-grow w-full overflow-x-hidden">
-            <ScrollToTop>
-              <Suspense fallback={<LoadingFallback />}>
-                <div className={`content-wrapper w-full transition-opacity duration-200 ${isLoading ? 'opacity-0' : 'opacity-100'}`}>
-                  <Routes location={location} key={location.pathname}>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/about" element={<About />} />
-                    <Route path="/services" element={<Services />} />
-                    <Route path="/products" element={<Products />} />
-                    <Route path="/clients" element={<Clients />} />
-                    <Route path="/contact" element={<Contact />} />
-                    <Route path="/checkout" element={<Checkout />} />
-                    <Route path="/services/agri-consultancy" element={<AgriConsultancy />} />
-                    <Route path="/services/poultry-farming" element={<PoultryFarming />} />
-                    <Route path="/services/feed-production" element={<FeedProduction />} />
-                    <Route path="/products/:id" element={<ProductDetail />} />
-                    <Route path="*" element={<NotFound />} />
-                  </Routes>
-                </div>
-              </Suspense>
-            </ScrollToTop>
-            <WhatsAppButton />
-            <Cart />
-          </main>
+          <ScrollToTop>
+            <Suspense fallback={<LoadingFallback />}>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/about" element={
+                  <ErrorBoundary fallback="Error loading About page">
+                    <Suspense fallback={<LoadingFallback />}>
+                      <About />
+                    </Suspense>
+                  </ErrorBoundary>
+                } />
+                <Route path="/past-projects" element={
+                  <ErrorBoundary fallback="Error loading Past Projects">
+                    <Suspense fallback={<LoadingFallback />}>
+                      <PastProjects />
+                    </Suspense>
+                  </ErrorBoundary>
+                } />
+                <Route path="/services" element={<Services />} />
+                <Route path="/products" element={<Products />} />
+                <Route path="/clients" element={<Clients />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/checkout" element={<Checkout />} />
+                <Route path="/services/agri-consultancy" element={<AgriConsultancy />} />
+                <Route path="/services/poultry-farming" element={<PoultryFarming />} />
+                <Route path="/services/feed-production" element={<FeedProduction />} />
+                <Route path="/products/:id" element={<ProductDetail />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Suspense>
+          </ScrollToTop>
           <Footer />
+          <WhatsAppButton />
+          <Cart />
         </div>
       </CartProvider>
     </ErrorBoundary>

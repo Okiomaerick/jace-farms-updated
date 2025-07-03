@@ -1,0 +1,158 @@
+/* Campaigns Section */
+.campaigns-section {
+  padding: 4rem 0;
+  background-color: #fff;
+}
+
+/* Dark mode support */
+.dark .campaigns-section {
+  background-color: #1a202c;
+}
+
+/* Flyer Grid */
+.flyer-grid {
+  display: grid;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+@media (min-width: 640px) {
+  .flyer-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .flyer-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Flyer Card */
+.flyer-card {
+  border-radius: 0.75rem;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  background-color: #fff;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.flyer-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.flyer-card img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Impact Stories Section */
+.impact-stories {
+  margin-top: 3rem;
+  background-color: #f0fdf4;
+  border-radius: 0.75rem;
+  padding: 2rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+.dark .impact-stories {
+  background-color: #1a472a;
+}
+
+.impact-stories h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #166534;
+}
+
+.dark .impact-stories h3 {
+  color: #86efac;
+}
+
+.impact-content {
+  line-height: 1.75;
+  color: #1f2937;
+}
+
+.dark .impact-content {
+  color: #e5e7eb;
+}
+
+.impact-content p {
+  margin-bottom: 1.25rem;
+}
+
+.impact-content ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.impact-content li {
+  margin-bottom: 0.5rem;
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 50;
+  padding: 1rem;
+}
+
+.modal-content {
+  position: relative;
+  max-width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: white;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.dark .modal-content {
+  background: #1f2937;
+}
+
+.modal-close {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #6b7280;
+}
+
+.modal-close:hover {
+  color: #1f2937;
+}
+
+.dark .modal-close:hover {
+  color: #e5e7eb;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .campaigns-section {
+    padding: 2rem 1rem;
+  }
+  
+  .modal-content {
+    max-width: 95%;
+    padding: 1rem;
+  }
+}

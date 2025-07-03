@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FaShoppingCart, FaLeaf, FaSeedling, FaTractor, FaVial } from 'react-icons/fa';
+import { createImageWithFallback, PictureWithFallback } from '../utils/imageUtils';
 
 // Function to get image URL from public directory
 const getImageUrl = (path) => {
@@ -12,7 +13,7 @@ const getImageUrl = (path) => {
 // Preload images
 const preloadImages = async () => {
   const images = [
-    'images/heroes/products-hero.jpg',
+    createImageWithFallback('/images/products/poultry-feed'),
     'images/heroes/default-hero.jpg'
   ];
 
@@ -45,7 +46,7 @@ const products = [
       'Fast-growing',
       'High survival rate'
     ],
-    image: '/images/products/one-month-old-chicks.jpg',
+    image: createImageWithFallback('/images/products/one-month-old-chicks1'),
     icon: <FaSeedling className="h-8 w-8 text-green-600" />,
     featured: true
   },
@@ -62,10 +63,11 @@ const products = [
       'Promotes healthy growth',
       'High-quality ingredients'
     ],
+    image: createImageWithFallback('/images/products/poultry-feed1'),
     icon: <FaLeaf className="h-8 w-8 text-green-600" />
   },
   {
-    id: 5,
+    id: 3,
     name: 'Farming Equipment',
     category: 'Machinery',
     price: 'Varies',
@@ -77,9 +79,9 @@ const products = [
       'Various sizes',
       'Maintenance services'
     ],
+    image: createImageWithFallback('/images/products/farming-equipment'),
     icon: <FaTractor className="h-8 w-8 text-green-600" />
-  },
-
+  }
 ];
 
 const Products = () => {
@@ -97,26 +99,19 @@ const Products = () => {
 
   const featuredProduct = products.find(product => product.featured);
 
-  const [heroImage, setHeroImage] = useState('');
-  const [defaultImage, setDefaultImage] = useState('');
+  const [heroImageWebP, setHeroImageWebP] = useState('');
+  const [heroImageJpg, setHeroImageJpg] = useState('');
+  const [defaultImageWebP, setDefaultImageWebP] = useState('');
+  const [defaultImageJpg, setDefaultImageJpg] = useState('');
 
   useEffect(() => {
-    // Preload images on component mount
-    preloadImages().then(() => {
-      // Set image URLs after preloading
-      setHeroImage('/images/heroes/products-hero.jpg');
-      setDefaultImage('/images/heroes/default-hero.jpg');
-    });
+    // Set image URLs
+    setHeroImageWebP('/src/assets/images/heroes/products-hero.webp');
+    // Since we only have WebP versions, we'll use the same for both
+    setHeroImageJpg('/src/assets/images/heroes/products-hero.webp');
+    setDefaultImageWebP('/src/assets/images/heroes/default-hero.webp');
+    setDefaultImageJpg('/src/assets/images/heroes/default-hero.webp');
   }, []);
-
-  // Handle image error
-  const handleImageError = (e) => {
-    console.error('Error loading image:', e.target.src);
-    if (e.target.src !== defaultImage) {
-      e.target.onerror = null; // Prevent infinite loop
-      e.target.src = defaultImage;
-    }
-  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -125,25 +120,28 @@ const Products = () => {
         {/* Background Image with Overlay */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute inset-0">
-            <img
-              src={heroImage || '/images/heroes/default-hero.jpg'}
-              alt="Poultry and farm products"
-              className="w-full h-full object-cover object-center"
-              style={{
-                minHeight: '24rem',
-                maxHeight: '32rem',
-                objectPosition: 'center 30%',
-                imageRendering: 'auto',
-                transform: 'translateZ(0)',
-                backfaceVisibility: 'hidden',
-                WebkitBackfaceVisibility: 'hidden',
-                willChange: 'transform'
-              }}
-              loading="eager"
-              decoding="async"
-              fetchpriority="high"
-              onError={handleImageError}
-            />
+            <picture>
+              <source srcSet={heroImageWebP || defaultImageWebP} type="image/webp" />
+              <source srcSet={heroImageJpg || defaultImageJpg} type="image/jpeg" />
+              <img
+                src={heroImageJpg || defaultImageJpg}
+                alt="Poultry and farm products"
+                className="w-full h-full object-cover object-center"
+                style={{
+                  minHeight: '24rem',
+                  maxHeight: '32rem',
+                  objectPosition: 'center 30%',
+                  imageRendering: 'auto',
+                  transform: 'translateZ(0)',
+                  backfaceVisibility: 'hidden',
+                  WebkitBackfaceVisibility: 'hidden',
+                  willChange: 'transform'
+                }}
+                loading="eager"
+                decoding="async"
+                fetchpriority="high"
+              />
+            </picture>
             <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-black/70"></div>
           </div>
         </div>
@@ -151,10 +149,13 @@ const Products = () => {
         {/* Hero Content */}
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 sm:py-32 md:py-40">
           <div className="text-center px-4 sm:px-6">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-white drop-shadow-lg">
-              Explore Our Farm Solutions
+            <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-6xl lg:text-7xl drop-shadow-xl leading-tight">
+              Quality Farm Products
             </h1>
-            <p className="mt-4 sm:mt-6 max-w-2xl mx-auto text-lg sm:text-xl text-gray-100 drop-shadow-md">
+            <p className="mt-8 text-2xl font-medium text-white max-w-4xl mx-auto sm:text-3xl">
+              Premium agricultural products for farmers and agribusinesses
+            </p>
+            <p className="mt-6 max-w-3xl mx-auto text-xl font-medium text-gray-100 drop-shadow-lg sm:text-2xl">
               Quality Products for Your Poultry and Agribusiness Needs
             </p>
           </div>
@@ -260,18 +261,16 @@ const Products = () => {
                   <div className="p-6">
                     <div className="flex items-center justify-center h-48 w-full mb-4 overflow-hidden rounded-lg bg-gray-100">
                       {product.image ? (
-                        <img 
-                          src={product.image} 
-                          alt={product.name}
-                          className="h-full w-full object-cover object-center"
-                          onError={(e) => {
-                            e.target.onerror = null;
-                            e.target.src = '/images/products/placeholder.jpg';
-                          }}
-                        />
+                        <div className="w-full h-full">
+                          <PictureWithFallback
+                            basePath={product.image.webp.replace(/\.webp$/, '')}
+                            alt={product.name}
+                            className="w-full h-full object-cover rounded-t-lg"
+                          />
+                        </div>
                       ) : (
-                        <div className="h-full w-full flex items-center justify-center bg-green-50">
-                          {product.icon}
+                        <div className="w-full h-48 flex items-center justify-center bg-gray-200">
+                          <span className="text-gray-400">No image available</span>
                         </div>
                       )}
                     </div>

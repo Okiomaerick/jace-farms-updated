@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
-import servicesHeroImage from '../assets/images/heroes/services-hero.jpg';
-import defaultHeroImage from '../assets/images/heroes/default-hero.jpg';
+import PictureWithFallback from '../components/ui/PictureWithFallback';
+import heroImage from '../assets/images/heroes/services-hero.webp';
 
 const services = [
   {
@@ -87,32 +87,35 @@ const Services = () => {
   return (
     <div className="bg-white">
       {/* Hero Section */}
-      <div className="relative bg-green-700 overflow-hidden">
-        <div className="absolute inset-0">
-          <img loading="lazy"
-            className="w-full h-full object-cover"
-            src={servicesHeroImage}
-            alt="Our agricultural services"
-            onError={(e) => {
-              e.target.onerror = null;
-              e.target.src = defaultHeroImage;
+      <div className="relative bg-gray-900">
+        <div className="relative h-auto min-h-[60vh] w-full py-20 md:py-32">
+          <div className="absolute inset-0 bg-black/60 z-10"></div>
+          <PictureWithFallback
+            src={heroImage}
+            alt="Jace Farms Services"
+            className="w-full h-full absolute inset-0 object-cover"
+            style={{
+              objectPosition: 'center center',
+              imageRendering: 'auto',
+              transform: 'translateZ(0)',
+              backfaceVisibility: 'hidden',
+              WebkitBackfaceVisibility: 'hidden'
             }}
+            loading="eager"
+            fallbackType="webp"
           />
-          <div className="absolute inset-0 bg-green-700 mix-blend-multiply" aria-hidden="true" />
-        </div>
-        <div className="max-w-7xl mx-auto">
-          <div className="relative z-10 pb-8 sm:pb-16 md:pb-20 lg:max-w-2xl lg:w-full lg:pb-28 xl:pb-32">
-            <div className="pt-10 sm:pt-16 lg:pt-8 lg:pb-14 lg:overflow-hidden">
-              <div className="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
-                <div className="lg:text-center">
-                  <h1 className="text-4xl tracking-tight font-extrabold text-white sm:text-5xl md:text-6xl">
-                    <span className="block">Our Services</span>
-                    <span className="block text-green-200">Comprehensive Agricultural Solutions</span>
-                  </h1>
-                  <p className="mt-3 text-base text-green-100 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
-                    Expert services designed to meet all your agricultural needs, from farm to market.
-                  </p>
-                </div>
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-20 h-full">
+            <div className="flex flex-col items-center justify-center h-full text-center py-12">
+              <div className="max-w-4xl space-y-6">
+                <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
+                  Our Services
+                </h1>
+                <h2 className="text-2xl font-semibold text-green-300 sm:text-3xl lg:text-4xl">
+                  Comprehensive Agricultural Solutions
+                </h2>
+                <p className="text-lg text-gray-200 sm:text-xl max-w-3xl mx-auto leading-relaxed">
+                  Expert services designed to meet all your agricultural needs, from farm to market.
+                </p>
               </div>
             </div>
           </div>

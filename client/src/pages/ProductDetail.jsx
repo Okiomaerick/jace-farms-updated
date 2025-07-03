@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { FaArrowLeft, FaWhatsapp, FaPhone, FaEnvelope, FaLeaf, FaSeedling, FaTractor, FaVial, FaShoppingCart } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
+import { createImageWithFallback, PictureWithFallback } from '../utils/imageUtils';
 
 // Sample product data with category-specific details
 const productData = {
@@ -23,18 +24,18 @@ const productData = {
       'Delivery available'
     ],
     details: {
-      breeds: ['Kroiler', 'Layers', 'Kienyeji'],
+      breeds: ['SASSO', 'KENBRO', 'KUROILER CHICKS'],
       minimumOrder: '100 chicks',
       delivery: 'Nationwide delivery available',
       support: '24/7 technical support',
       warranty: '48-hour health guarantee'
     },
     icon: <FaSeedling className="h-8 w-8 text-green-600" />,
-    backgroundImage: '/images/products/one-month-old-chicks.jpg',
+    backgroundImage: createImageWithFallback('/images/products/one-month-old-chicks'),
     gallery: [
-      '/images/products/one-month-old-chicks1.jpg',
-      '/images/products/one-month-old-chicks2.jpg',
-      '/images/products/one-month-old-chicks3.jpg'
+      createImageWithFallback('/images/products/one-month-old-chicks1'),
+      createImageWithFallback('/images/products/one-month-old-chicks2'),
+      createImageWithFallback('/images/products/one-month-old-chicks3')
     ]
   },
   
@@ -56,320 +57,125 @@ const productData = {
     ],
     details: {
       types: [
-        { name: 'Chick Mash (0-8 weeks)', price: 'KSh 3,200/50kg' },
-        { name: 'Growers Mash (9-18 weeks)', price: 'KSh 3,100/50kg' },
-        { name: 'Layers Mash (19+ weeks)', price: 'KSh 3,300/50kg' },
-        { name: 'Broiler Starter (0-4 weeks)', price: 'KSh 3,400/50kg' },
-        { name: 'Broiler Finisher (5-8 weeks)', price: 'KSh 3,300/50kg' },
-        { name: 'Poultry Concentrate (for mixing)', price: 'KSh 4,500/50kg' }
+        { name: 'Growers Mash', price: 'KSh 2,700/50kg' },
+        { name: 'Layers Mash', price: 'KSh 3,200/50kg' },
+        { name: 'Chick Mash', price: 'KSh 3,450/50kg' },
+        { name: 'Kienyeji Mash', price: 'KSh 2,100/50kg' },
+        { name: 'Dairy Meal', price: 'KSh 2,400/50kg' },
+        { name: 'Dog Meal', price: 'KSh 2,500/50kg' },
+        { name: 'Sow and Weaner', price: 'KSh 2,200/50kg' }
       ],
       benefits: [
         'Promotes rapid growth and weight gain',
         'Enhances egg production and quality',
-        'Improves feathering and pigmentation',
-        'Boosts immune system',
-        'Reduces mortality rates',
-        'Cost-effective feeding solution'
+        'Improves animal health and vitality',
+        'Balanced nutrition for all stages',
+        'Affordable feeding solutions',
+        'Premium quality ingredients'
       ],
       delivery: 'Nationwide delivery available',
       support: 'Free feeding program consultation',
       warranty: 'Quality guaranteed'
     },
     icon: <FaLeaf className="h-8 w-8 text-green-600" />,
-    backgroundImage: '/images/products/poultry-feed.jpg',
+    backgroundImage: createImageWithFallback('/images/products/poultry-feed'),
     gallery: [
-      '/images/products/poultry-feed-1.jpg',
-      '/images/products/poultry-feed-2.jpg',
-      '/images/products/poultry-feed-3.jpg'
+      createImageWithFallback('/images/products/poultry-feed1'),
+      createImageWithFallback('/images/products/poultry-feed2'),
+      createImageWithFallback('/images/products/poultry-feed3')
     ]
   },
 
-  // Fertilizers
+
+  // Poultry Equipment
   3: {
     id: 3,
-    name: 'Fertilizers',
-    category: 'Crop Inputs',
-    price: 'From KSh 2,800',
-    unit: 'per 50kg bag',
-    description: 'High-quality organic and chemical fertilizers to boost your crop yields. Our fertilizers are specially formulated for Kenyan soil conditions.',
-    features: [
-      'Balanced NPK ratios',
-      'Organic options available',
-      'Improves soil fertility',
-      'Various formulations',
-      'Suitable for all crops',
-      'Fast absorption'
-    ],
-    details: {
-      types: [
-        { name: 'CAN (Calcium Ammonium Nitrate)', price: 'KSh 3,200/50kg' },
-        { name: 'DAP (Diammonium Phosphate)', price: 'KSh 3,500/50kg' },
-        { name: 'NPK 23:23:0', price: 'KSh 3,800/50kg' },
-        { name: 'UREA', price: 'KSh 3,000/50kg' },
-        { name: 'Organic Manure', price: 'KSh 1,500/50kg' }
-      ],
-      application: 'Our agronomists can provide application guidelines',
-      delivery: 'Nationwide delivery available',
-      support: 'Free soil testing available'
-    },
-    icon: <FaLeaf className="h-8 w-8 text-green-600" />,
-    backgroundImage: '/images/products/fertilizers.jpg',
-    gallery: [
-      '/images/products/fertilizers-1.jpg',
-      '/images/products/fertilizers-2.jpg',
-      '/images/products/fertilizers-3.jpg'
-    ]
-  },
-  // Veterinary Medicines
-  4: {
-    id: 4,
-    name: 'Veterinary Medicines',
-    category: 'Animal Health',
-    price: 'Varies by product',
-    unit: '',
-    description: 'Comprehensive range of veterinary medicines and supplements to keep your livestock healthy and productive.',
-    features: [
-      'Vaccines for all livestock',
-      'Dewormers and parasiticides',
-      'Antibiotics and antibacterials',
-      'Vitamin and mineral supplements',
-      'Wound care products',
-      'Disinfectants and sanitizers'
-    ],
-    details: {
-      categories: [
-        {
-          name: 'Poultry Medicines',
-          items: [
-            'Vaccines (Newcastle, Gumboro, etc.)',
-            'Coccidiostats',
-            'Electrolytes',
-            'Liver tonics'
-          ]
-        },
-        {
-          name: 'Livestock Medicines',
-          items: [
-            'Antibiotics',
-            'Anti-inflammatory drugs',
-            'Mastitis treatment',
-            'Hoof care products'
-          ]
-        },
-        {
-          name: 'Supplements',
-          items: [
-            'Vitamin premixes',
-            'Mineral blocks',
-            'Growth promoters',
-            'Probiotics'
-          ]
-        }
-      ],
-      delivery: 'Nationwide delivery available',
-      support: 'Veterinary consultation available',
-      warranty: 'Check product labels for expiry dates'
-    },
-    icon: <FaVial className="h-8 w-8 text-green-600" />,
-    backgroundImage: '/images/products/medicines.jpg',
-    gallery: [
-      '/images/products/medicines-1.jpg',
-      '/images/products/medicines-2.jpg',
-      '/images/products/medicines-3.jpg'
-    ]
-  },
-  // Farming Equipment
-  5: {
-    id: 5,
-    name: 'Farming Equipment',
-    category: 'Machinery',
+    name: 'Poultry Equipment',
+    category: 'Poultry Supplies',
     price: 'Varies by equipment',
     unit: '',
-    description: 'High-quality farming equipment and machinery to make your farming operations more efficient and productive.',
+    description: 'Comprehensive range of high-quality poultry farming equipment and supplies to optimize your poultry production and management.',
     features: [
-      'Durable and reliable equipment',
-      'Suitable for small to large scale farming',
-      'Low maintenance requirements',
-      'Energy efficient',
-      'Easy to operate',
-      'After-sales support available'
-    ],
-    details: {
-      categories: [
-        {
-          name: 'Poultry Equipment',
-          items: [
-            'Automatic feeders and drinkers',
-            'Brooders and heaters',
-            'Nest boxes',
-            'Egg incubators',
-            'Poultry cages and coops'
-          ]
-        },
-        {
-          name: 'Irrigation Equipment',
-          items: [
-            'Drip irrigation kits',
-            'Sprinkler systems',
-            'Water pumps',
-            'Fertilizer injectors',
-            'Irrigation controllers'
-          ]
-        },
-        {
-          name: 'Tractors & Implements',
-          items: [
-            'Compact tractors',
-            'Plows and harrows',
-            'Planters and seeders',
-            'Sprayers',
-            'Trailers'
-          ]
-        }
-      ],
-      delivery: 'Delivery and installation available',
-      support: 'Training and maintenance services',
-      warranty: '1-2 years warranty on equipment'
-    },
-    icon: <FaTractor className="h-8 w-8 text-green-600" />,
-    backgroundImage: '/images/products/equipment.jpg',
-    gallery: [
-      '/images/products/equipment-1.jpg',
-      '/images/products/equipment-2.jpg',
-      '/images/products/equipment-3.jpg'
-    ]
-  },
-
-  // Farming Equipment
-  5: {
-    id: 5,
-    name: 'Farming Equipment',
-    category: 'Machinery',
-    price: 'Varies by equipment',
-    unit: '',
-    description: 'High-quality farming equipment and machinery to enhance your agricultural productivity and efficiency.',
-    features: [
-      'Durable and reliable equipment',
-      'Suitable for all farm sizes',
-      'Energy efficient',
-      'Low maintenance',
-      'After-sales support',
+      'Durable and poultry-specific equipment',
+      'Suitable for all flock sizes',
+      'Easy to clean and maintain',
+      'Designed for bird health and safety',
+      'After-sales support and training',
       'Installation services available'
     ],
     details: {
       categories: [
         {
-          name: 'Tillage Equipment',
+          name: 'Feeding Equipment',
           items: [
-            'Tractors (various HP)',
-            'Plows (disc, moldboard)',
-            'Harrows (disc, tine)',
-            'Ridgers and bed formers',
-            'Rotavators'
+            'Automatic feeders',
+            'Manual feeders (hanging & trough)',
+            'Chick feeders',
+            'Feed storage bins',
+            'Feed trolleys',
+            'Feed scoops and measures'
           ]
         },
         {
-          name: 'Planting Equipment',
+          name: 'Watering Systems',
           items: [
-            'Seed drills',
-            'Planters (manual & mechanical)',
-            'Transplanters',
-            'Fertilizer spreaders',
-            'Irrigation equipment'
+            'Nipple drinkers',
+            'Bell drinkers',
+            'Automatic waterers',
+            'Water tanks and reservoirs',
+            'Water filters and regulators',
+            'Water heaters for chicks'
           ]
         },
         {
-          name: 'Harvesting Equipment',
+          name: 'Housing Equipment',
           items: [
-            'Combine harvesters',
-            'Forage harvesters',
-            'Threshers',
-            'Shellers',
-            'Grain dryers'
+            'Brooders and heat lamps',
+            'Egg incubators (manual & automatic)',
+            'Nest boxes',
+            'Perches and roosts',
+            'Partition and divider systems',
+            'Ventilation systems'
           ]
         },
         {
-          name: 'Livestock Equipment',
+          name: 'Health & Management',
           items: [
-            'Milking machines',
-            'Feed mixers',
-            'Water pumps & tanks',
-            'Poultry house equipment',
-            'Shearing equipment'
+            'Vaccination equipment',
+            'Weighing scales',
+            'Leg bands and wing markers',
+            'Catching and handling equipment',
+            'Disinfection systems',
+            'Waste management solutions'
+          ]
+        },
+        {
+          name: 'Egg Handling',
+          items: [
+            'Egg collection trays',
+            'Egg washers',
+            'Egg grading machines',
+            'Egg packaging materials',
+            'Egg storage systems',
+            'Egg candlers'
           ]
         }
       ],
       delivery: 'Nationwide delivery available',
-      support: 'Installation and training provided',
+      support: 'Installation, training, and technical support provided',
       warranty: '1-2 years warranty on equipment'
+    
     },
     icon: <FaTractor className="h-8 w-8 text-green-600" />,
-    backgroundImage: '/images/products/equipment.jpg',
+    backgroundImage: createImageWithFallback('/images/products/farming-equipment'),
     gallery: [
-      '/images/products/equipment-1.jpg',
-      '/images/products/equipment-2.jpg',
-      '/images/products/equipment-3.jpg'
-    ]
-  },
-  
-  // Seeds
-  6: {
-    id: 6,
-    name: 'Seeds',
-    category: 'Crop Inputs',
-    price: 'From KSh 500',
-    unit: 'per kg',
-    description: 'High-quality certified seeds for various crops, carefully selected for high yield and disease resistance. Our seeds are ideal for Kenyan climate and soil conditions.',
-    features: [
-      'Certified and high germination rate',
-      'Disease-resistant varieties',
-      'High-yielding hybrids',
-      'Suitable for local conditions',
-      'Available in different package sizes',
-      'Seasonal varieties available'
-    ],
-    details: {
-      categories: [
-        {
-          name: 'Cereal Seeds',
-          items: [
-            'Maize (DH04, H614, H6213)',
-            'Wheat (Eagle 10, Njoro BW1)',
-            'Rice (Basmati 370, BW 196)',
-            'Barley (Sabini, Nguzo)'
-          ]
-        },
-        {
-          name: 'Vegetable Seeds',
-          items: [
-            'Tomatoes (Anna F1, Rambo F1)',
-            'Kales (Sukuma wiki)',
-            'Cabbages (Gloria F1, Pundamilia)',
-            'Onions (Red Creole, Texas Grano)'
-          ]
-        },
-        {
-          name: 'Legume Seeds',
-          items: [
-            'Beans (Rosecoco, Mwitemania)',
-            'Green grams (N26, Nylon)',
-            'Cowpeas (K80, M66)',
-            'Soybeans (Gazelle, SB19)'
-          ]
-        }
-      ],
-      delivery: 'Nationwide delivery available',
-      support: 'Free agronomic advice',
-      warranty: 'Germination guarantee'
-    },
-    icon: <FaSeedling className="h-8 w-8 text-green-600" />,
-    backgroundImage: '/images/products/seeds.jpg',
-    gallery: [
-      '/images/products/seeds-1.jpg',
-      '/images/products/seeds-2.jpg',
-      '/images/products/seeds-3.jpg'
+      createImageWithFallback('/images/products/farming-equipment1'),
+      createImageWithFallback('/images/products/farming-equipment2'),
+      createImageWithFallback('/images/products/farming-equipment3')
     ]
   }
+  
+
 };
 
 const ProductDetail = () => {
@@ -484,15 +290,21 @@ const ProductDetail = () => {
             <div className="mb-8 lg:mb-0">
               {/* Main Image */}
               <div className="bg-gray-100 rounded-lg overflow-hidden mb-4 relative aspect-w-1 aspect-h-1">
-                <img 
-                  src={product.backgroundImage} 
+                <PictureWithFallback
+                  basePath={product.backgroundImage.webp.replace('.webp', '')}
                   alt={product.name}
                   className="w-full h-full object-cover"
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = '/images/products/placeholder.jpg';
-                  }}
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+                <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                  <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
+                  <div className="flex items-center">
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-600 text-white">
+                      {product.category}
+                    </span>
+                    <span className="ml-4 text-xl font-semibold">{product.price}</span>
+                  </div>
+                </div>
               </div>
               
               {/* Thumbnails */}
@@ -516,14 +328,10 @@ const ProductDetail = () => {
                       window.location.reload();
                     }}
                   >
-                    <img 
-                      src={img} 
+                    <PictureWithFallback
+                      basePath={img.webp.replace('.webp', '')}
                       alt={`${product.name} view ${index + 1}`}
                       className="w-full h-full object-cover"
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = '/images/products/placeholder.jpg';
-                      }}
                     />
                     <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-200 rounded-md"></div>
                   </div>

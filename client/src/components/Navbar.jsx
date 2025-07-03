@@ -1,8 +1,12 @@
-import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useState, useEffect, Fragment } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Menu, Transition } from '@headlessui/react';
+import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import CartIcon from './CartIcon';
-// Using absolute path from public folder
-const logo = '/images/logo.png';
+// Using relative path from src/assets/images/webp
+import logoWebP from '../assets/images/webp/logo.webp';
+// Fallback to png if webp is not supported
+const logoPng = logoWebP.replace(/\.webp$/, '.png');
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,12 +27,21 @@ const Navbar = () => {
 
   const navLinks = [
     { name: 'Home', path: '/' },
-    { name: 'About', path: '/about' },
+    { 
+      name: 'About', 
+      path: '/about',
+      dropdown: [
+        { name: 'About Us', path: '/about' },
+        { name: 'Past Projects / Impact Stories', path: '/past-projects' }
+      ]
+    },
     { name: 'Services', path: '/services' },
     { name: 'Products', path: '/products' },
     { name: 'Clients', path: '/clients' },
     { name: 'Contact', path: '/contact' },
   ];
+  
+  const navigate = useNavigate();
 
   return (
     <nav
@@ -40,12 +53,17 @@ const Navbar = () => {
         <div className="flex justify-between items-center h-16">
           <div className="flex-shrink-0">
             <Link to="/" className="flex items-center">
-              <img 
-                src={logo} 
-                alt="Jace Farms Logo" 
-                className="h-20 w-auto" 
-                style={{ maxHeight: '80px' }}
-              />
+              <picture>
+                <source srcSet={logoWebP} type="image/webp" />
+                <source srcSet={logoPng} type="image/png" />
+                <img 
+                  src={logoPng} 
+                  alt="Jace Farms Logo" 
+                  className="h-20 w-auto" 
+                  style={{ maxHeight: '80px' }}
+                  loading="lazy"
+                />
+              </picture>
             </Link>
           </div>
           
@@ -53,22 +71,71 @@ const Navbar = () => {
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-8">
               {navLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  to={link.path}
-                  className={`px-4 py-2.5 rounded-lg text-base font-semibold transition-all duration-200 ${
-                    location.pathname === link.path
-                      ? 'bg-green-700 text-white shadow-md hover:bg-green-800'
-                      : 'text-gray-800 hover:bg-green-50 hover:text-green-700'
-                  }`}
-                >
-                  <span className="relative">
-                    {link.name}
-                    {location.pathname === link.path && (
-                      <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-yellow-400"></span>
-                    )}
-                  </span>
-                </Link>
+                <div key={link.name} className="relative">
+                  {link.dropdown ? (
+                    <Menu as="div" className="relative">
+                      <Menu.Button 
+                        className={`px-4 py-2.5 rounded-lg text-base font-semibold transition-all duration-200 flex items-center ${
+                          location.pathname.startsWith(link.path) && !location.pathname.includes('past-projects')
+                            ? 'bg-green-700 text-white shadow-md hover:bg-green-800'
+                            : 'text-gray-800 hover:bg-green-50 hover:text-green-700'
+                        }`}
+                      >
+                        {link.name}
+                        <ChevronDownIcon 
+                          className="ml-1 -mr-1 h-5 w-5 text-current" 
+                          aria-hidden="true"
+                        />
+                      </Menu.Button>
+                      <Transition
+                        as={Fragment}
+                        enter="transition ease-out duration-100"
+                        enterFrom="transform opacity-0 scale-95"
+                        enterTo="transform opacity-100 scale-100"
+                        leave="transition ease-in duration-75"
+                        leaveFrom="transform opacity-100 scale-100"
+                        leaveTo="transform opacity-0 scale-95"
+                      >
+                        <Menu.Items className="absolute left-0 z-10 mt-2 w-56 origin-top-left rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                          <div className="py-1">
+                            {link.dropdown.map((item) => (
+                              <Menu.Item key={item.name}>
+                                {({ active }) => (
+                                  <Link
+                                    to={item.path}
+                                    className={`block px-4 py-2 text-sm ${
+                                      location.pathname === item.path
+                                        ? 'bg-green-50 text-green-700 font-medium'
+                                        : 'text-gray-700 hover:bg-green-50 hover:text-green-700'
+                                    }`}
+                                  >
+                                    {item.name}
+                                  </Link>
+                                )}
+                              </Menu.Item>
+                            ))}
+                          </div>
+                        </Menu.Items>
+                      </Transition>
+                    </Menu>
+                  ) : (
+                    <Link
+                      to={link.path}
+                      className={`px-4 py-2.5 rounded-lg text-base font-semibold transition-all duration-200 ${
+                        location.pathname === link.path
+                          ? 'bg-green-700 text-white shadow-md hover:bg-green-800'
+                          : 'text-gray-800 hover:bg-green-50 hover:text-green-700'
+                      }`}
+                    >
+                      <span className="relative">
+                        {link.name}
+                        {location.pathname === link.path && (
+                          <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-yellow-400"></span>
+                        )}
+                      </span>
+                    </Link>
+                  )}
+                </div>
               ))}
             </div>
           </div>

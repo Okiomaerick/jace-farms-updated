@@ -4,6 +4,24 @@ import { resolve } from 'path';
 import { visualizer } from 'rollup-plugin-visualizer';
 import { readFileSync, writeFileSync } from 'fs';
 import { fileURLToPath } from 'url';
+import { ViteImageOptimizer } from 'vite-plugin-image-optimizer';
+
+// Only run image optimization in production
+const optimizeImages = () => {
+  if (process.env.NODE_ENV === 'production') {
+    return ViteImageOptimizer({
+      jpg: { quality: 80 },
+      jpeg: { quality: 80 },
+      png: { quality: 80 },
+      webp: { quality: 80, lossless: false, effort: 6 },
+      avif: { quality: 70, lossless: false, effort: 6 },
+      includePublic: true,
+      logStats: true,
+      silent: false,
+    });
+  }
+  return null;
+};
 
 // Plugin to copy .redirects file
 const copyRedirects = () => ({
@@ -28,8 +46,13 @@ export default defineConfig(({ mode }) => ({
   
   plugins: [
     copyRedirects(),
+    optimizeImages(),
     react({
-      jsxImportSource: 'react',
+      // Enable Fast Refresh
+      fastRefresh: true,
+      // Enable React strict mode
+      jsxRuntime: 'automatic',
+      // Enable Babel for modern JSX transform
       babel: {
         plugins: [
           ['@babel/plugin-transform-react-jsx', {
@@ -50,17 +73,26 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       '@': resolve(__dirname, './src'),
-      'react': resolve(__dirname, 'node_modules/react'),
-      'react-dom': resolve(__dirname, 'node_modules/react-dom'),
-      'react-router-dom': resolve(__dirname, 'node_modules/react-router-dom')
+      '~': resolve(__dirname, './node_modules')
     },
-    extensions: ['.js', '.jsx', '.json', '.mjs']
+    extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
+    preserveSymlinks: true
   },
-
+  
+  // Server configuration
   server: {
-    port: 3000,
+    port: 3001,
     open: true,
-    historyApiFallback: true,
+    strictPort: true,
+    host: true,
+    hmr: {
+      protocol: 'ws',
+      host: 'localhost',
+      port: 3001
+    },
+    watch: {
+      usePolling: true
+    },
     proxy: {
       '/api': {
         target: 'http://localhost:5000',
@@ -68,16 +100,19 @@ export default defineConfig(({ mode }) => ({
         secure: false,
         rewrite: (path) => path.replace(/^\/api/, '')
       }
+    },
+    fs: {
+      strict: true,
+      allow: ['..']
     }
   },
-
+  
+  // Build configuration
   build: {
     outDir: 'dist',
     emptyOutDir: true,
     sourcemap: mode !== 'production',
     minify: mode === 'production' ? 'terser' : false,
-    
-    // Ensure _redirects is copied as-is without processing
     assetsInlineLimit: 0,
     
     rollupOptions: {

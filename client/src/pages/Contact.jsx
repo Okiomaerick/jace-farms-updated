@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { FaMapMarkerAlt, FaPhone, FaEnvelope, FaClock } from 'react-icons/fa';
 import ContactForm from '../components/ContactForm';
+import PictureWithFallback from '../components/ui/PictureWithFallback';
+import heroImage from '../assets/images/heroes/default-hero.webp';
 
 const Contact = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -40,22 +42,41 @@ const Contact = () => {
   return (
     <div className="bg-white">
       {/* Hero Section */}
-      <div className="relative bg-green-700">
-        <div className="absolute inset-0">
-          <img
-            className="w-full h-full object-cover opacity-30"
-            src="https://images.unsplash.com/photo-1563986768609-322da13575f3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
-            alt="Contact us"
+      <div className="relative bg-gray-900">
+        <div className="relative h-80 sm:h-[500px] w-full">
+          <div className="absolute inset-0 bg-black opacity-50 z-10"></div>
+          <PictureWithFallback
+            src={heroImage}
+            alt="Contact Us - Jace Farms"
+            className="w-full h-full object-cover"
+            style={{
+              objectPosition: 'center center',
+              imageRendering: 'auto',
+              transform: 'translateZ(0)',
+              backfaceVisibility: 'hidden',
+              WebkitBackfaceVisibility: 'hidden'
+            }}
+            loading="eager"
+            fallbackType="webp"
           />
-          <div className="absolute inset-0 bg-green-700 mix-blend-multiply" aria-hidden="true" />
-        </div>
-        <div className="relative max-w-7xl mx-auto py-24 px-4 sm:py-32 sm:px-6 lg:px-8">
-          <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
-            Contact Us
-          </h1>
-          <p className="mt-6 text-xl text-green-100 max-w-3xl">
-            We'd love to hear from you. Get in touch with our team for inquiries, partnerships, or to learn more about our services.
-          </p>
+          <div className="absolute inset-0 flex items-center justify-center z-20 px-4 sm:px-6 lg:px-8">
+            <div className="text-center">
+              <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
+                Contact Us
+              </h1>
+              <p className="mt-6 text-xl text-gray-200 max-w-3xl mx-auto">
+                We'd love to hear from you. Get in touch with our team for inquiries, partnerships, or to learn more about our services.
+              </p>
+              <div className="mt-10">
+                <a
+                  href="#contact-form"
+                  className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                >
+                  Send Us a Message
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
