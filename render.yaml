@@ -3,7 +3,11 @@ services:
     name: jace-farms
     env: node
     buildCommand: |
-      npm install && cd client && npm install && npm run build
+      npm install
+      cd client
+      npm install
+      npm install -g vite
+      npm run build
     startCommand: node server.js
     envVars:
       - key: NODE_ENV
