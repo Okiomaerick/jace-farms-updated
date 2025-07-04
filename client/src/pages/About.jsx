@@ -98,25 +98,19 @@ const About = () => {
 
       {/* Our Story */}
       <div className="py-16 bg-white overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 space-y-8 sm:px-6 lg:px-8">
-          <div className="lg:grid lg:grid-cols-2 lg:gap-8 lg:items-center">
-            <div>
-              <h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
-                Our Story
-              </h2>
-              <div className="mt-6 text-gray-500 space-y-6">
-                <p className="text-lg">
-                  Founded in 2006, Jace Farms & Consultancy Services Ltd began as a small family-owned farm in Egerton, Kenya. What started as a passion project has grown into a leading agribusiness and consultancy firm, serving hundreds of farmers across the country.
-                </p>
-                <p className="text-lg">
-                  Over the past 17+ years, we've expanded our services to include poultry farming, crop production, and agricultural consultancy, always staying true to our commitment to sustainability and innovation.
-                </p>
-                <p className="text-lg">
-                  Today, we're proud to have helped over 800 farmers improve their yields, increase profitability, and implement sustainable farming practices that benefit both their families and the environment.
-                </p>
-              </div>
-            </div>
-            <div className="mt-12 -mx-4 relative lg:mt-0 h-96 rounded-lg shadow-xl overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+              Our Story
+            </h2>
+            <p className="mt-3 text-xl text-green-600">
+              From a Feed Store to a Model of Agricultural Innovation
+            </p>
+          </div>
+          
+          <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+            {/* Hero Image */}
+            <div className="relative h-64 md:h-96 w-full">
               <PictureWithFallback
                 src={storyImage}
                 alt="Jace Farms - Our Story"
@@ -131,6 +125,62 @@ const About = () => {
                 loading="eager"
                 fallbackType="webp"
               />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+              <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 text-white">
+                <h3 className="text-2xl md:text-3xl font-bold">Our Journey in Agriculture</h3>
+                <p className="mt-2 text-green-200">Transforming farming through innovation and education</p>
+              </div>
+            </div>
+            
+            {/* Content */}
+            <div className="p-6 md:p-8 lg:p-12">
+              <div className="prose prose-lg text-gray-700 max-w-none space-y-6">
+              <p>
+                Jace Farms and Consultancy Service Ltd started its journey in February 2023 under the name Jace Feed Store, located in Maili Nne, Nyandarua County. The mission was clear: to provide quality and affordable animal feeds to small-scale farmers rearing poultry, cattle, and pigs.
+              </p>
+              <p>
+                However, it soon became evident that feeds alone could not address the wider challenges farmers were facing. Many of our clients lacked access to practical agricultural advice and technical support. In response, we introduced extension services, conducting farm visits and offering personalized agronomic support.
+              </p>
+              <p>
+                This natural progression led to the evolution of our enterprise into Jace Farms and Consultancy Service Ltd, officially registered as a limited company in January 2024.
+              </p>
+              
+              <h3 className="text-2xl font-bold text-gray-900 mt-10">Expanding Reach through Farmer Training</h3>
+              <p>
+                As our services gained traction, we attracted partnerships with like-minded organizations. We were contracted to train farmers through various initiatives, including:
+              </p>
+              <ul className="list-disc pl-6 space-y-2">
+                <li>LEDO Kenya in Lokichoggio, Turkana County</li>
+                <li>Compassion International, training caregivers at Manguo and Gatero CYDC centers</li>
+              </ul>
+              <p>
+                Our training focused primarily on poultry production. However, even with knowledge, many farmers still faced barriers to accessing quality chicks, and some suffered losses due to early chick mortality. Moreover, there was a clear gap: farmers needed a practical learning center to bridge the gap between theory and practice.
+              </p>
+              
+              <h3 className="text-2xl font-bold text-gray-900 mt-10">Practical Solutions: Jace Poultry Model Unit</h3>
+              <p>
+                In June 2024, we established the Jace Poultry Model Unit in Njoro, near Egerton University. This model farm has a capacity of 3,000 chickens and demonstrates the full poultry production cycle—from day-old chick brooding to grower and laying stages.
+              </p>
+              <p>
+                The unit not only serves as a production site but also acts as a training and demonstration center. We welcome farmers from across Kenya to visit, learn, and gain hands-on experience in modern poultry farming practices.
+              </p>
+              
+              <h3 className="text-2xl font-bold text-gray-900 mt-10">Greener Solutions: Jace Green Farm</h3>
+              <p>
+                As our poultry operations expanded, so did the challenge of managing poultry waste—especially due to the strong ammonia smell and volume of droppings. This led to the creation of Jace Green Farm, an organic vegetable farm that recycles poultry waste into fertilizer.
+              </p>
+              <p>
+                Vegetables grown here support both household use and feed supplementation for our chickens. To enhance sustainability further, we are working on installing a biogas unit to convert poultry waste into renewable energy for chick brooding.
+              </p>
+              
+              <h3 className="text-2xl font-bold text-gray-900 mt-10">Empowering Farmers Across Kenya</h3>
+              <p>
+                Every two months, we host farmer training sessions that bring together individuals from various regions to build their skills, confidence, and productivity in poultry and sustainable farming.
+              </p>
+              <p className="text-xl font-medium text-green-700 mt-8">
+                At Jace Farms and Consultancy, we believe in farming with purpose—offering products, knowledge, and innovation that help farmers grow sustainably, profitably, and with resilience.
+              </p>
+              </div>
             </div>
           </div>
         </div>
