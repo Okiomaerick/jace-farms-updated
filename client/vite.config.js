@@ -5,22 +5,20 @@ import { visualizer } from 'rollup-plugin-visualizer';
 import { readFileSync, writeFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { ViteImageOptimizer } from 'vite-plugin-image-optimizer';
+import { VitePWA } from 'vite-plugin-pwa';
+import { compression } from 'vite-plugin-compression';
+import legacy from '@vitejs/plugin-legacy';
 
-// Only run image optimization in production
-const optimizeImages = () => {
-  if (process.env.NODE_ENV === 'production') {
-    return ViteImageOptimizer({
-      jpg: { quality: 80 },
-      jpeg: { quality: 80 },
-      png: { quality: 80 },
-      webp: { quality: 80, lossless: false, effort: 6 },
-      avif: { quality: 70, lossless: false, effort: 6 },
-      includePublic: true,
-      logStats: true,
-      silent: false,
-    });
-  }
-  return null;
+// Image optimization configuration
+const imageOptimizerConfig = {
+  jpg: { quality: 75 },
+  jpeg: { quality: 75 },
+  png: { quality: 75 },
+  webp: { quality: 70, lossless: false, effort: 5 },
+  avif: { quality: 65, lossless: false, effort: 5 },
+  includePublic: true,
+  logStats: true,
+  silent: false,
 };
 
 // Plugin to copy .redirects file
@@ -46,107 +44,107 @@ export default defineConfig(({ mode }) => ({
   
   plugins: [
     copyRedirects(),
-    optimizeImages(),
+    ViteImageOptimizer(imageOptimizerConfig),
+    legacy({
+      targets: ['defaults', 'not IE 11'],
+    }),
     react({
-      // Enable Fast Refresh
-      fastRefresh: true,
-      // Enable React strict mode
-      jsxRuntime: 'automatic',
-      // Enable Babel for modern JSX transform
+      jsxImportSource: '@emotion/react',
       babel: {
-        plugins: [
-          ['@babel/plugin-transform-react-jsx', {
-            runtime: 'automatic',
-            importSource: 'react'
-          }]
-        ]
-      }
+        plugins: ['@emotion/babel-plugin'],
+      },
+    }),
+    VitePWA({
+      registerType: 'autoUpdate',
+      includeAssets: ['favicon.ico', 'robots.txt', 'apple-touch-icon.png'],
+      manifest: {
+        name: 'Jace Farms',
+        short_name: 'JaceFarms',
+        description: 'Jace Farms & Consultancy Services',
+        theme_color: '#ffffff',
+        icons: [
+          {
+            src: 'pwa-192x192.png',
+            sizes: '192x192',
+            type: 'image/png',
+          },
+          {
+            src: 'pwa-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+          },
+        ],
+      },
+    }),
+    compression({
+      algorithm: 'brotliCompress',
+      ext: '.br',
+      threshold: 1024,
     }),
     mode === 'analyze' && visualizer({
       open: true,
-      filename: 'bundle-analyzer.html',
       gzipSize: true,
-      brotliSize: true
-    })
+      brotliSize: true,
+    }),
   ].filter(Boolean),
 
-  resolve: {
-    alias: {
-      '@': resolve(__dirname, './src'),
-      '~': resolve(__dirname, './node_modules')
-    },
-    extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
-    preserveSymlinks: true
-  },
-  
   // Server configuration
   server: {
-    port: 3001,
+    port: 3000,
     open: true,
     strictPort: true,
     host: true,
     hmr: {
       protocol: 'ws',
       host: 'localhost',
-      port: 3001
+      port: 3000,
+    },
+    fs: {
+      strict: true,
     },
     watch: {
-      usePolling: true
+      usePolling: true,
     },
     proxy: {
       '/api': {
         target: 'http://localhost:5000',
         changeOrigin: true,
-        secure: false,
-        rewrite: (path) => path.replace(/^\/api/, '')
-      }
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      },
     },
-    fs: {
-      strict: true,
-      allow: ['..']
-    }
   },
-  
+
   // Build configuration
   build: {
     outDir: 'dist',
-    emptyOutDir: true,
     sourcemap: mode !== 'production',
     minify: mode === 'production' ? 'terser' : false,
-    assetsInlineLimit: 0,
-    
+    cssMinify: mode === 'production',
+    chunkSizeWarningLimit: 1000,
+    reportCompressedSize: false,
     rollupOptions: {
       output: {
+        manualChunks: {
+          react: ['react', 'react-dom', 'react-router-dom'],
+          vendor: ['axios', 'clsx', 'tailwind-merge'],
+        },
         // Don't hash the .redirects file
         assetFileNames: (assetInfo) => {
           if (assetInfo.name === '.redirects') return '[name][extname]';
           return 'assets/[name]-[hash][extname]';
         },
-        
-        manualChunks: (id) => {
-          if (id.includes('node_modules')) {
-            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router-dom')) {
-              return 'vendor';
-            }
-            if (id.includes('@headlessui') || id.includes('@heroicons')) {
-              return 'ui';
-            }
-            return 'vendor-other';
-          }
-          return null;
-        },
-        
         chunkFileNames: 'js/[name]-[hash].js',
-        entryFileNames: 'js/[name]-[hash].js'
-      }
+        entryFileNames: 'js/[name]-[hash].js',
+      },
     },
-    
-    // Terser options for production
-    terserOptions: mode === 'production' ? {
+    terserOptions: {
       compress: {
-        drop_console: true,
-        drop_debugger: true
-      }
-    } : {}
-  }
+        drop_console: mode === 'production',
+        drop_debugger: mode === 'production',
+      },
+      format: {
+        comments: false,
+      },
+    },
+  },
 }));

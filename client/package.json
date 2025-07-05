@@ -22,13 +22,16 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "prebuild": "npm run optimize-images",
     "preview": "vite preview --port 3000",
     "analyze": "vite build --mode analyze",
     "lint": "eslint . --ext .js,.jsx --ignore-path .eslintignore --fix",
     "optimize-images": "node scripts/convertImages.mjs",
     "update-image-imports": "node scripts/updateImageImports.mjs",
     "format": "prettier --write .",
-    "preview:prod": "vite preview --port 3000 --mode production"
+    "preview:prod": "vite preview --port 3000 --mode production",
+    "generate-sitemap": "node scripts/generateSitemap.js",
+    "generate-robots": "node scripts/generateRobots.js"
   },
   "devDependencies": {
     "@babel/plugin-transform-react-jsx": "^7.27.1",
@@ -37,6 +40,9 @@
     "@types/react-dom": "^18.2.15",
     "@vitejs/plugin-react": "^4.2.0",
     "autoprefixer": "^10.4.15",
+    "compression-webpack-plugin": "^10.0.0",
+    "critters": "^0.0.21",
+    "esbuild": "^0.19.0",
     "eslint": "^8.55.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.29.0",
@@ -49,15 +55,21 @@
     "postcss": "^8.4.31",
     "postcss-import": "^16.0.0",
     "postcss-nesting": "^12.0.2",
+    "postcss-preset-env": "^9.3.0",
+    "preload-webpack-plugin": "^3.0.0-beta.4",
     "prettier": "^3.1.1",
     "rollup-plugin-visualizer": "^5.14.0",
     "sharp": "^0.34.2",
     "tailwindcss": "^3.3.5",
     "terser": "^5.43.1",
+    "terser-webpack-plugin": "^5.3.10",
     "vite": "^5.4.19",
     "vite-plugin-compression": "^0.5.1",
     "vite-plugin-image-optimizer": "^2.0.2",
-    "vite-plugin-imagemin": "^0.6.1"
+    "vite-plugin-imagemin": "^0.6.1",
+    "vite-plugin-pwa": "^0.17.4",
+    "web-vitals": "^3.5.0",
+    "workbox-window": "^7.0.0"
   },
   "browserslist": [
     ">0.2%",

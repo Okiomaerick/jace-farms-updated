@@ -218,35 +218,44 @@ const ProductDetail = () => {
     }
 
     const selectedVariant = {};
+    let itemPrice = product.price;
     
     // Add selected breed if available
     if (product.details?.breeds && selectedBreed) {
       selectedVariant.breed = selectedBreed;
     }
     
-    // Add selected feed type and its price if available
+    // Handle feed type selection and pricing
     if (product.details?.types && selectedFeedType) {
       const selectedType = product.details.types.find(type => type.name === selectedFeedType);
       if (selectedType) {
         selectedVariant.type = selectedType.name;
-        selectedVariant.price = selectedType.price;
+        // Extract numeric price from the price string if available
+        if (selectedType.price) {
+          const priceMatch = selectedType.price.match(/\d+([.,]\d+)*/);
+          if (priceMatch) {
+            // Store the numeric price for calculations
+            itemPrice = `KSh ${priceMatch[0].replace(',', '')}`;
+          }
+        }
       }
     }
 
-    // Create a clean product object with only the necessary properties
+    // Create a clean product object with all necessary properties
     const productToAdd = {
       id: product.id,
       name: product.name,
       category: product.category,
-      price: product.price,
+      price: itemPrice, // Use the calculated price
       unit: product.unit,
       backgroundImage: product.backgroundImage,
-      quantity: quantity, // Ensure quantity is properly set
+      quantity: quantity,
+      details: product.details, // Pass along the details for variant pricing
       ...(Object.keys(selectedVariant).length > 0 && { variant: selectedVariant }),
       notes: notes.trim() || undefined
     };
 
-    console.log('Adding to cart:', productToAdd); // Debug log
+    console.log('Adding to cart:', productToAdd);
     addToCart(productToAdd);
   };
 

@@ -1,5 +1,5 @@
 import { Routes, Route, useLocation } from 'react-router-dom';
-import { Suspense, lazy, useEffect, useState } from 'react';
+import { Suspense, lazy, useEffect, memo, useCallback } from 'react';
 import { CartProvider } from './contexts/CartContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -8,6 +8,13 @@ import WhatsAppButton from './components/WhatsAppButton';
 import Cart from './components/Cart';
 import ErrorBoundary from './components/ErrorBoundary';
 import LoadingFallback from './components/LoadingFallback';
+
+// Memoized components to prevent unnecessary re-renders
+const MemoizedNavbar = memo(Navbar);
+const MemoizedFooter = memo(Footer);
+const MemoizedScrollToTop = memo(ScrollToTop);
+const MemoizedWhatsAppButton = memo(WhatsAppButton);
+const MemoizedCart = memo(Cart);
 
 // Enhanced lazy loading with better error handling and retry logic
 const retry = (fn, retriesLeft = 3, interval = 1000) => {
@@ -71,39 +78,28 @@ function App() {
     }
   }, []);
 
-  // Track if the app is loading
-  const [isLoading, setIsLoading] = useState(false);
+  // Handle route changes with useCallback to prevent unnecessary re-renders
+  const handleRouteChange = useCallback(() => {
+    // No need for loading state as Suspense handles this
+    window.scrollTo(0, 0);
+  }, []);
 
   // Handle route changes
   useEffect(() => {
-    setIsLoading(true);
-    const timer = setTimeout(() => setIsLoading(false), 200);
-    return () => clearTimeout(timer);
-  }, [location]);
+    handleRouteChange();
+  }, [location, handleRouteChange]);
 
   return (
     <ErrorBoundary>
       <CartProvider>
         <div className="flex flex-col min-h-screen">
-          <Navbar />
-          <ScrollToTop>
+          <MemoizedNavbar />
+          <MemoizedScrollToTop>
             <Suspense fallback={<LoadingFallback />}>
               <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/about" element={
-                  <ErrorBoundary fallback="Error loading About page">
-                    <Suspense fallback={<LoadingFallback />}>
-                      <About />
-                    </Suspense>
-                  </ErrorBoundary>
-                } />
-                <Route path="/past-projects" element={
-                  <ErrorBoundary fallback="Error loading Past Projects">
-                    <Suspense fallback={<LoadingFallback />}>
-                      <PastProjects />
-                    </Suspense>
-                  </ErrorBoundary>
-                } />
+                <Route path="/about" element={<About />} />
+                <Route path="/past-projects" element={<PastProjects />} />
                 <Route path="/services" element={<Services />} />
                 <Route path="/products" element={<Products />} />
                 <Route path="/clients" element={<Clients />} />
@@ -116,10 +112,10 @@ function App() {
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>
-          </ScrollToTop>
-          <Footer />
-          <WhatsAppButton />
-          <Cart />
+          </MemoizedScrollToTop>
+          <MemoizedFooter />
+          <MemoizedWhatsAppButton />
+          <MemoizedCart />
         </div>
       </CartProvider>
     </ErrorBoundary>

@@ -41,12 +41,31 @@ export const CartProvider = ({ children }) => {
     setCart(prevCart => {
       console.log('Previous cart:', prevCart); // Debug log
       
+      // Extract price from variant if available, otherwise use product price
+      let itemPrice = product.price;
+      let variantPrice = '';
+      
+      if (product.variant?.type && product.details?.types) {
+        const selectedVariant = product.details.types.find(
+          t => t.name === product.variant.type
+        );
+        if (selectedVariant?.price) {
+          // Extract numeric value from price string (e.g., "KSh 3,200/50kg" -> 3200)
+          const priceMatch = selectedVariant.price.match(/\d+([.,]\d+)*/);
+          if (priceMatch) {
+            itemPrice = `KSh ${priceMatch[0].replace(',', '')}`;
+            variantPrice = selectedVariant.price; // Store the display price
+          }
+        }
+      }
+      
       // Create a clean product object with only the necessary properties
       const productToAdd = { 
         id: product.id,
         name: product.name,
         category: product.category,
-        price: product.price,
+        price: itemPrice, // Use the extracted price
+        variantPrice: variantPrice, // Store the display price if available
         unit: product.unit,
         backgroundImage: product.backgroundImage,
         quantity: quantity,

@@ -170,11 +170,11 @@ function CartItems({ cart, updateQuantity, removeFromCart, setIsCartOpen }) {
                     </h3>
                     <div className="ml-4 text-right">
                       <p className="font-semibold">
-                        KSh {parseFloat(product.price.replace(/[^0-9.]/g, '') * product.quantity).toLocaleString('en-US')}
+                        KSh {(parseFloat(product.price.replace(/[^0-9.]/g, '')) * product.quantity).toLocaleString('en-US')}
                       </p>
-                      {product.variant?.price && (
+                      {(product.variantPrice || product.variant?.price) && (
                         <p className="text-sm text-gray-500">
-                          {product.variant.price} each
+                          {product.variantPrice || product.variant.price} {product.unit ? `per ${product.unit}` : 'each'}
                         </p>
                       )}
                       {product.variant?.breed && (
