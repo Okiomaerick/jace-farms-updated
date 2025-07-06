@@ -47,6 +47,7 @@ export default defineConfig(({ mode }) => ({
     ViteImageOptimizer(imageOptimizerConfig),
     legacy({
       targets: ['defaults', 'not IE 11'],
+      modernPolyfills: true
     }),
     react({
       jsxImportSource: '@emotion/react',
