@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { FaArrowLeft, FaWhatsapp, FaPhone, FaEnvelope, FaLeaf, FaSeedling, FaTractor, FaVial, FaShoppingCart } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
-import { createImageWithFallback, PictureWithFallback } from '../utils/imageUtils';
+import { createImageWithFallback, PictureWithFallback } from '../utils/imageUtils.jsx';
 
 // Sample product data with category-specific details
 const productData = {

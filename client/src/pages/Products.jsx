@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FaShoppingCart, FaLeaf, FaSeedling, FaTractor, FaVial } from 'react-icons/fa';
-import { createImageWithFallback, PictureWithFallback } from '../utils/imageUtils';
+import { createImageWithFallback, PictureWithFallback } from '../utils/imageUtils.jsx';
 
 // Function to get image URL from public directory
 const getImageUrl = (path) => {
