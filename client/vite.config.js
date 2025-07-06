@@ -6,7 +6,7 @@ import { readFileSync, writeFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { ViteImageOptimizer } from 'vite-plugin-image-optimizer';
 import { VitePWA } from 'vite-plugin-pwa';
-import { compression } from 'vite-plugin-compression';
+import compression from 'vite-plugin-compression';
 import legacy from '@vitejs/plugin-legacy';
 
 // Image optimization configuration
