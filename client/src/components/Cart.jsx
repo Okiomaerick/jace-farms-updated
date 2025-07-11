@@ -129,6 +129,21 @@ function EmptyCart({ setIsCartOpen }) {
   );
 }
 
+function getProductImage(productName) {
+  const imageMap = {
+    'One-Month Old Chicks': '/images/products/one-month-old-chicks2.webp',
+    'Poultry Feed': '/images/products/poultry-feed.webp',
+    'Farming Equipment': '/images/products/farming-equipment1.webp'
+  };
+  
+  // Find the matching key (case insensitive)
+  const matchingKey = Object.keys(imageMap).find(key => 
+    productName.toLowerCase().includes(key.toLowerCase())
+  );
+  
+  return matchingKey ? imageMap[matchingKey] : '/images/placeholder-product.svg';
+}
+
 function CartItems({ cart, updateQuantity, removeFromCart, setIsCartOpen }) {
   return (
     <div className="flow-root">
@@ -146,7 +161,7 @@ function CartItems({ cart, updateQuantity, removeFromCart, setIsCartOpen }) {
             <li key={itemKey} className="flex py-6">
               <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                 <img
-                  src={product.backgroundImage || '/images/placeholder-product.svg'}
+                  src={getProductImage(product.name)}
                   alt={product.name}
                   className="h-full w-full object-cover object-center"
                   onError={(e) => {

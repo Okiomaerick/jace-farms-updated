@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { FaMapMarkerAlt, FaPhone, FaEnvelope, FaClock } from 'react-icons/fa';
 import ContactForm from '../components/ContactForm';
 import PictureWithFallback from '../components/ui/PictureWithFallback';
-import heroImage from '../assets/images/heroes/default-hero.webp';
+import heroImage from '../../public/images/heroes/contact-hero.webp';
 
 const Contact = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -43,39 +43,27 @@ const Contact = () => {
     <div className="bg-white">
       {/* Hero Section */}
       <div className="relative bg-gray-900">
-        <div className="relative h-80 sm:h-[500px] w-full">
-          <div className="absolute inset-0 bg-black opacity-50 z-10"></div>
-          <PictureWithFallback
-            src={heroImage}
-            alt="Contact Us - Jace Farms"
-            className="w-full h-full object-cover"
-            style={{
-              objectPosition: 'center center',
-              imageRendering: 'auto',
-              transform: 'translateZ(0)',
-              backfaceVisibility: 'hidden',
-              WebkitBackfaceVisibility: 'hidden'
-            }}
-            loading="eager"
-            fallbackType="webp"
-          />
-          <div className="absolute inset-0 flex items-center justify-center z-20 px-4 sm:px-6 lg:px-8">
-            <div className="text-center">
-              <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
-                Contact Us
-              </h1>
-              <p className="mt-6 text-xl text-gray-200 max-w-3xl mx-auto">
-                We'd love to hear from you. Get in touch with our team for inquiries, partnerships, or to learn more about our services.
-              </p>
-              <div className="mt-10">
-                <a
-                  href="#contact-form"
-                  className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-                >
-                  Send Us a Message
-                </a>
-              </div>
-            </div>
+        <div className="relative min-h-[500px] w-full">
+          <div className="absolute inset-0 z-0">
+            <div className="absolute inset-0 bg-black opacity-50"></div>
+            <PictureWithFallback
+              src={heroImage}
+              alt="Contact Us - Jace Farms"
+              className="w-full h-full object-cover"
+              style={{
+                objectPosition: 'center center',
+                imageRendering: 'auto',
+                transform: 'translateZ(0)',
+                backfaceVisibility: 'hidden',
+                WebkitBackfaceVisibility: 'hidden'
+              }}
+              loading="eager"
+              fallbackType="webp"
+            />
+          </div>
+          {/* Empty container to maintain layout */}
+          <div className="relative max-w-7xl mx-auto h-full px-4 sm:px-6 lg:px-8">
+            <div className="h-full"></div>
           </div>
         </div>
       </div>

@@ -112,14 +112,6 @@ const Clients = () => {
               <p className="mt-6 text-xl text-gray-200 max-w-3xl mx-auto">
                 Building lasting relationships with farmers and agricultural businesses across Kenya.
               </p>
-              <div className="mt-10">
-                <a
-                  href="#testimonials"
-                  className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-                >
-                  Read Testimonials
-                </a>
-              </div>
             </div>
           </div>
         </div>

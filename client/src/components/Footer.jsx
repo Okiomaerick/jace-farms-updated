@@ -102,17 +102,23 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Copyright */}
+        {/* Copyright and Developer Credit */}
         <div className="mt-12 pt-8 border-t border-gray-800">
-          <div className="md:flex md:items-center md:justify-between">
+          <div className="text-center">
             <p className="text-gray-400 text-sm">
-              &copy; {currentYear} Jace Farms & Consultancy Services Ltd. All rights reserved.
+              &copy; {currentYear} Jace Farms. All Rights Reserved.
             </p>
-            <div className="mt-4 md:mt-0">
-              <p className="text-gray-400 text-sm">
-                Transforming Agriculture Through Innovation
-              </p>
-            </div>
+            <p className="text-gray-400 text-sm mt-2">
+              Designed & Developed by{' '}
+              <a 
+                href="https://example.com/borangi" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-blue-400 font-medium hover:underline"
+              >
+                Borangi
+              </a>
+            </p>
           </div>
         </div>
       </div>

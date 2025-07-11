@@ -1,82 +1,36 @@
 import { useState } from 'react';
 
-// Import testimonial images with WebP and JPG fallbacks
-const luciaImg = {
-  webp: () => {
-    try {
-      return require('../assets/images/testimonials/lucia.webp');
-    } catch (e) {
-      return null;
-    }
-  },
-  jpg: () => {
-    try {
-      return require('../assets/images/testimonials/lucia.jpg');
-    } catch (e) {
-      return null;
-    }
-  }
-};
-
-const muremiImg = {
-  webp: () => {
-    try {
-      return require('../assets/images/testimonials/muremi.webp');
-    } catch (e) {
-      return null;
-    }
-  },
-  jpg: () => {
-    try {
-      return require('../assets/images/testimonials/muremi.jpg');
-    } catch (e) {
-      return null;
-    }
-  }
-};
-
-const hesbonImg = {
-  webp: () => {
-    try {
-      return require('../assets/images/testimonials/hesbon.webp');
-    } catch (e) {
-      return null;
-    }
-  },
-  jpg: () => {
-    try {
-      return require('../assets/images/testimonials/hesbon.jpg');
-    } catch (e) {
-      return null;
-    }
-  }
+// Default testimonial image
+const defaultImg = {
+  webp: () => null,
+  jpg: () => null
 };
 
 const testimonials = [
   {
     id: 1,
-    name: 'Lucia Jaber',
-    role: 'Mixed Farmer, Kericho',
-    content: 'Jace Farms helped me balance my crop and poultry farming. Their feed and agronomy advice are on point.',
-    image: luciaImg,
-    initials: 'LJ'
+    name: 'CPA Charles Githuku',
+    role: 'Njoroge & Associates Audit Farm',
+    content: 'An efficient poultry farm that has maximized available resources. Their attention to detail and operational excellence is commendable.',
+    image: defaultImg,
+    initials: 'CG'
   },
   {
     id: 2,
-    name: 'Muremi Nene',
-    role: 'Poultry Farmer, Nyeri',
-    content: 'I doubled my egg output thanks to their feed plan and disease control tips. Very reliable team.',
-    image: muremiImg,
-    initials: 'MN'
+    name: 'George Maina',
+    role: 'Former Attachee',
+    content: 'A perfect company to learn and grow. The hands-on experience and mentorship I received were invaluable for my professional development.',
+    image: defaultImg,
+    initials: 'GM'
   },
   {
     id: 3,
-    name: 'Hesbon Mogaka',
-    role: 'Agribusiness Consultant, Kisii',
-    content: 'Working with Jace Farms made my advisory work easier. Their tech solutions and consulting are solid.',
-    image: hesbonImg,
-    initials: 'HM'
-  },
+    name: 'Rachael Wangui',
+    role: 'Poultry Farmer',
+    content: 'Excellent work in the poultry unit. The quality of their birds and level of care is truly impressive and has inspired my own farming practices.',
+    image: defaultImg,
+    initials: 'RW'
+  }
 ];
 
 const Testimonials = () => {
