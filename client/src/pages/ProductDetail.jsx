@@ -94,77 +94,47 @@ const productData = {
     category: 'Poultry Supplies',
     price: 'Varies by equipment',
     unit: '',
-    description: 'Comprehensive range of high-quality poultry farming equipment and supplies to optimize your poultry production and management.',
+    description: 'High-quality poultry farming equipment including drinkers, feeders, and brooding units for all your poultry needs.',
     features: [
-      'Durable and poultry-specific equipment',
+      'Durable and long-lasting materials',
       'Suitable for all flock sizes',
       'Easy to clean and maintain',
       'Designed for bird health and safety',
-      'After-sales support and training',
-      'Installation services available'
+      'Competitive pricing',
+      'Nationwide delivery available'
     ],
     details: {
-      categories: [
+      equipment: [
         {
-          name: 'Feeding Equipment',
-          items: [
-            'Automatic feeders',
-            'Manual feeders (hanging & trough)',
-            'Chick feeders',
-            'Feed storage bins',
-            'Feed trolleys',
-            'Feed scoops and measures'
+          type: 'Drinker',
+          variants: [
+            { name: '1.5 Litre Drinker', price: '150', unit: 'each', description: '1.5 litre capacity poultry drinker' },
+            { name: '6 Litre Drinker', price: '400', unit: 'each', description: '6 litre capacity poultry drinker' }
           ]
         },
         {
-          name: 'Watering Systems',
-          items: [
-            'Nipple drinkers',
-            'Bell drinkers',
-            'Automatic waterers',
-            'Water tanks and reservoirs',
-            'Water filters and regulators',
-            'Water heaters for chicks'
+          type: 'Feeder',
+          variants: [
+            { name: '16 Hole Trough Feeder', price: '120', unit: 'each', description: '16 hole trough feeder for efficient feeding' },
+            { name: '1.5kg Feeder', price: '150', unit: 'each', description: '1.5kg capacity poultry feeder' },
+            { name: '3kg Feeder', price: '300', unit: 'each', description: '3kg capacity poultry feeder' },
+            { name: '6kg Feeder', price: '400', unit: 'each', description: '6kg capacity poultry feeder' },
+            { name: '5kg Feeding Trough', price: '450', unit: 'each', description: '5kg capacity feeding trough' }
           ]
         },
         {
-          name: 'Housing Equipment',
-          items: [
-            'Brooders and heat lamps',
-            'Egg incubators (manual & automatic)',
-            'Nest boxes',
-            'Perches and roosts',
-            'Partition and divider systems',
-            'Ventilation systems'
-          ]
-        },
-        {
-          name: 'Health & Management',
-          items: [
-            'Vaccination equipment',
-            'Weighing scales',
-            'Leg bands and wing markers',
-            'Catching and handling equipment',
-            'Disinfection systems',
-            'Waste management solutions'
-          ]
-        },
-        {
-          name: 'Egg Handling',
-          items: [
-            'Egg collection trays',
-            'Egg washers',
-            'Egg grading machines',
-            'Egg packaging materials',
-            'Egg storage systems',
-            'Egg candlers'
+          type: 'Brooding Unit',
+          variants: [
+            { name: '100 Chicks Capacity', price: '15,000', unit: 'each', description: 'Brooding unit for 100 chicks' },
+            { name: '200 Chicks Capacity', price: '20,000', unit: 'each', description: 'Brooding unit for 200 chicks' },
+            { name: '300 Chicks Capacity', price: '25,000', unit: 'each', description: 'Brooding unit for 300 chicks' },
+            { name: '500 Chicks Capacity', price: '35,000', unit: 'each', description: 'Brooding unit for 500 chicks' }
           ]
         }
       ],
       delivery: 'Nationwide delivery available',
-      support: 'Installation, training, and technical support provided',
-      warranty: '1-2 years warranty on equipment'
-    
+      support: 'Technical support and installation guidance provided',
+      warranty: '1 year warranty on all equipment'
     },
     icon: <FaTractor className="h-8 w-8 text-green-600" />,
     backgroundImage: createImageWithFallback('/images/products/farming-equipment'),
@@ -185,8 +155,22 @@ const ProductDetail = () => {
   const [notes, setNotes] = useState('');
   const [selectedBreed, setSelectedBreed] = useState('');
   const [selectedFeedType, setSelectedFeedType] = useState('');
+  const [equipmentQuantities, setEquipmentQuantities] = useState({});
   const [selectionError, setSelectionError] = useState('');
   const { addToCart } = useCart();
+
+  // Initialize equipment quantities when product changes
+  useEffect(() => {
+    if (product.details?.equipment) {
+      const initialQuantities = {};
+      product.details.equipment.forEach(equipment => {
+        equipment.variants.forEach(variant => {
+          initialQuantities[`${equipment.type}-${variant.name}`] = 1;
+        });
+      });
+      setEquipmentQuantities(initialQuantities);
+    }
+  }, [product]);
 
   // Initialize selected breed/feed type when product changes
   useEffect(() => {
@@ -211,8 +195,38 @@ const ProductDetail = () => {
     return true;
   };
 
-  const handleAddToCart = () => {
-    // Validate selection before adding to cart
+  const handleAddToCart = (equipmentType = null, variant = null) => {
+    // For equipment items
+    if (equipmentType && variant) {
+      const quantity = equipmentQuantities[`${equipmentType}-${variant.name}`] || 1;
+      if (quantity < 1) {
+        setSelectionError('Quantity must be at least 1');
+        return;
+      }
+
+      const productToAdd = {
+        id: `${product.id}-${variant.name.toLowerCase().replace(/\s+/g, '-')}`,
+        name: `${product.name} - ${variant.name}`,
+        category: product.category,
+        price: `KSh ${variant.price.replace(/,/g, '')}`,
+        unit: variant.unit || 'each',
+        description: variant.description,
+        quantity: quantity,
+        variant: {
+          type: equipmentType,
+          name: variant.name,
+          price: variant.price
+        },
+        notes: notes.trim() || undefined,
+        backgroundImage: product.backgroundImage
+      };
+
+      console.log('Adding to cart:', productToAdd);
+      addToCart(productToAdd);
+      return;
+    }
+
+    // For non-equipment products (original logic)
     if (!validateSelection()) {
       return;
     }
@@ -220,37 +234,32 @@ const ProductDetail = () => {
     const selectedVariant = {};
     let itemPrice = product.price;
     
-    // Add selected breed if available
     if (product.details?.breeds && selectedBreed) {
       selectedVariant.breed = selectedBreed;
     }
     
-    // Handle feed type selection and pricing
     if (product.details?.types && selectedFeedType) {
       const selectedType = product.details.types.find(type => type.name === selectedFeedType);
       if (selectedType) {
         selectedVariant.type = selectedType.name;
-        // Extract numeric price from the price string if available
         if (selectedType.price) {
           const priceMatch = selectedType.price.match(/\d+([.,]\d+)*/);
           if (priceMatch) {
-            // Store the numeric price for calculations
             itemPrice = `KSh ${priceMatch[0].replace(',', '')}`;
           }
         }
       }
     }
 
-    // Create a clean product object with all necessary properties
     const productToAdd = {
       id: product.id,
       name: product.name,
       category: product.category,
-      price: itemPrice, // Use the calculated price
+      price: itemPrice,
       unit: product.unit,
       backgroundImage: product.backgroundImage,
       quantity: quantity,
-      details: product.details, // Pass along the details for variant pricing
+      details: product.details,
       ...(Object.keys(selectedVariant).length > 0 && { variant: selectedVariant }),
       notes: notes.trim() || undefined
     };
@@ -478,28 +487,158 @@ const ProductDetail = () => {
                   )}
 
                   {/* General Product Details */}
-                  <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-                    <h4 className="text-lg font-semibold text-gray-900 mb-4">Additional Information</h4>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {product.details.delivery && (
-                        <div className="bg-gray-50 p-4 rounded-md">
-                          <dt className="text-sm font-medium text-gray-500">Delivery</dt>
-                          <dd className="mt-1 text-sm text-gray-900">{product.details.delivery}</dd>
+                  <div className="space-y-6">
+                    {/* Equipment Table */}
+                    {product.details.equipment ? (
+                      <div className="space-y-8">
+                        {product.details.equipment.map((equipment, index) => (
+                          <div key={index} className="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200">
+                            <h3 className="px-6 py-4 bg-gray-50 text-lg font-semibold text-gray-900 border-b border-gray-200">
+                              {equipment.type}
+                            </h3>
+                            <div className="overflow-x-auto">
+                              <table className="min-w-full divide-y divide-gray-200">
+                                <thead className="bg-gray-50">
+                                  <tr>
+                                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                      Description
+                                    </th>
+                                    <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                      Quantity
+                                    </th>
+                                    <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                      Price (KSh)
+                                    </th>
+                                    <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                      Action
+                                    </th>
+                                  </tr>
+                                </thead>
+                                <tbody className="bg-white divide-y divide-gray-200">
+                                  {equipment.variants.map((variant, vIndex) => {
+                                    const itemKey = `${equipment.type}-${variant.name}`;
+                                    const itemQuantity = equipmentQuantities[itemKey] || 1;
+                                    
+                                    return (
+                                      <tr key={vIndex} className="hover:bg-gray-50">
+                                        <td className="px-6 py-4">
+                                          <div className="space-y-1">
+                                          <div className="text-base font-semibold text-gray-900">{variant.name}</div>
+                                          {variant.description && (
+                                            <div className="text-sm text-gray-700">{variant.description}</div>
+                                          )}
+                                        </div>
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                          <div className="flex items-center justify-center">
+                                            <button 
+                                              onClick={(e) => {
+                                                e.stopPropagation();
+                                                setEquipmentQuantities(prev => ({
+                                                  ...prev,
+                                                  [itemKey]: Math.max(1, (prev[itemKey] || 1) - 1)
+                                                }));
+                                              }}
+                                              className="text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 rounded-md p-1"
+                                              aria-label="Decrease quantity"
+                                            >
+                                              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+                                              </svg>
+                                            </button>
+                                            <input
+                                              type="number"
+                                              min="1"
+                                              value={itemQuantity}
+                                              onChange={(e) => {
+                                                const value = Math.max(1, parseInt(e.target.value) || 1);
+                                                setEquipmentQuantities(prev => ({
+                                                  ...prev,
+                                                  [itemKey]: value
+                                                }));
+                                              }}
+                                              className="mx-2 w-16 text-center border border-gray-300 rounded-md py-1 px-2 text-sm"
+                                              aria-label="Quantity"
+                                            />
+                                            <button 
+                                              onClick={(e) => {
+                                                e.stopPropagation();
+                                                setEquipmentQuantities(prev => ({
+                                                  ...prev,
+                                                  [itemKey]: (prev[itemKey] || 1) + 1
+                                                }));
+                                              }}
+                                              className="text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 rounded-md p-1"
+                                              aria-label="Increase quantity"
+                                            >
+                                              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                                              </svg>
+                                            </button>
+                                          </div>
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                          <div className="text-gray-900">{parseInt(variant.price.replace(/,/g, '')).toLocaleString()}</div>
+                                          <div className="text-xs text-gray-500">per {variant.unit}</div>
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                          <button
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              handleAddToCart(equipment.type, variant);
+                                            }}
+                                            className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                                          >
+                                            Add to Cart
+                                          </button>
+                                        </td>
+                                      </tr>
+                                    );
+                                  })}
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      // Original details display for non-equipment products
+                      <div>
+                        <h3 className="text-lg font-medium text-gray-900">Product Details</h3>
+                        <div className="mt-4 space-y-4">
+                          {product.details.breeds && (
+                            <div className="flex">
+                              <span className="text-gray-500 w-32 flex-shrink-0">Breeds</span>
+                              <span className="text-gray-900">{product.details.breeds.join(', ')}</span>
+                            </div>
+                          )}
+                          {product.details.minimumOrder && (
+                            <div className="flex">
+                              <span className="text-gray-500 w-32 flex-shrink-0">Minimum Order</span>
+                              <span className="text-gray-900">{product.details.minimumOrder}</span>
+                            </div>
+                          )}
+                          {product.details.delivery && (
+                            <div className="flex">
+                              <span className="text-gray-500 w-32 flex-shrink-0">Delivery</span>
+                              <span className="text-gray-900">{product.details.delivery}</span>
+                            </div>
+                          )}
+                          {product.details.support && (
+                            <div className="flex">
+                              <span className="text-gray-500 w-32 flex-shrink-0">Support</span>
+                              <span className="text-gray-900">{product.details.support}</span>
+                            </div>
+                          )}
+                          {product.details.warranty && (
+                            <div className="flex">
+                              <span className="text-gray-500 w-32 flex-shrink-0">Warranty</span>
+                              <span className="text-gray-900">{product.details.warranty}</span>
+                            </div>
+                          )}
                         </div>
-                      )}
-                      {product.details.support && (
-                        <div className="bg-gray-50 p-4 rounded-md">
-                          <dt className="text-sm font-medium text-gray-500">Support</dt>
-                          <dd className="mt-1 text-sm text-gray-900">{product.details.support}</dd>
-                        </div>
-                      )}
-                      {product.details.warranty && (
-                        <div className="bg-gray-50 p-4 rounded-md">
-                          <dt className="text-sm font-medium text-gray-500">Warranty</dt>
-                          <dd className="mt-1 text-sm text-gray-900">{product.details.warranty}</dd>
-                        </div>
-                      )}
-                    </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}

@@ -3,7 +3,7 @@ import CountUp from 'react-countup';
 
 const stats = [
   { id: 1, name: 'Farmers Served', value: 800, suffix: '+' },
-  { id: 2, name: 'Years Experience', value: 17, suffix: '+' },
+  { id: 2, name: 'Years Experience', value: 3, suffix: '+' },
   { id: 3, name: '4-6 weeks old chicks brooded and sold', value: 4000, suffix: '+' },
   { id: 4, name: 'Satisfaction Rate', value: 98, suffix: '%' },
 ];

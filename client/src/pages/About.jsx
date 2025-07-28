@@ -32,6 +32,19 @@ const teamMembers = [
       'Team Supervision',
       'System Improvement'
     ]
+  },
+  {
+    id: 3,
+    name: 'Gideon Mwangi',
+    role: 'Marketing and Training Coordinator',
+    bio: 'Gideon Mwangi serves as the Marketing and Training Coordinator at Jace Farms and Consultancy Service Ltd, where he plays a pivotal role in developing and delivering impactful farmer training programs while leading strategic marketing efforts. His passion lies in empowering farmers economically by helping them turn their farms into profitable and resilient ventures. Gideon ensures that every training session is practical, relevant, and tailored to meet the evolving needs of smallholder farmers. He leads outreach efforts to connect with farming communities, development partners, and agro-based institutions, committed to helping farmers achieve real growth and long-term success through knowledge and implementation support.',
+    image: '/images/team/gideon-mwangi.jpg',
+    keyRoles: [
+      'Farmer Training & Capacity Building',
+      'Marketing and Outreach',
+      'Farmer Support & Advisory Services',
+      'Program Coordination & Reporting'
+    ]
   }
 ];
 
