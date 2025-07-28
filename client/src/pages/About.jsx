@@ -24,7 +24,7 @@ const teamMembers = [
     name: 'Cecilia Mumbi',
     role: 'Operations Manager',
     bio: 'Cecilia Mumbi holds a Bachelor\'s degree in Business Management and is passionate about entrepreneurship and programming. She ensures day-to-day operations align with the company\'s goals.',
-    image: '/images/team/cecilia-mumbi.jpg',
+    image: '/images/team/cecilia-mumbi (copy 1).jpg',
     keyRoles: [
       'Process Management',
       'Customer Service Coordination',
