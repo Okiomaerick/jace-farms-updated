@@ -111,7 +111,7 @@ const Footer = () => {
             <p className="text-gray-400 text-sm mt-2">
               Designed & Developed by{' '}
               <a 
-                href="https://example.com/borangi" 
+                href="https://borangi.onrender.com" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-blue-400 font-medium hover:underline"
